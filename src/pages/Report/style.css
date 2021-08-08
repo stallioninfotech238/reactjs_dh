@@ -1,0 +1,72 @@
+.listingPage .navbar-brand img#main-logo{max-width:125px}
+.listingPage .main-navbar{padding: 0 30px;}
+.listingPage .main-navbar .navbar a.navbar-brand{-ms-flex:0 0 16.666667%;flex:0 0 16.666667%;max-width:16.666667%;}
+.listingPage .main-sidebar .nav-wrapper .nav-item{border-bottom:1px solid #e1e5eb;font-weight:400;color:#3d5170;padding:.9375rem 1.5625rem;}
+.listingPage .main-navbar .navbar .header-user-wrap img.user-avatar{width:45px;height:45px;max-width:45px;object-fit:cover;object-position:top;}
+.listingPage .main-navbar .btn-history{padding: 10px 17px;font-size: 15px;margin-left: 10px;}
+.listingPage .main-navbar .all-center-dd {padding: 0;}
+.listingPage .mb-10{margin-bottom:10px;}
+.listingPage .mb-20{margin-bottom:20px;}
+.listingPage .mb-30{margin-bottom:30px;}
+.listingPage .mt-10{margin-top:10px;}
+.listingPage .mt-20{margin-top:20px;}
+.listingPage .mt-30{margin-top:30px;}
+.main-navbar .all-center-dd{-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;}
+.main-navbar .all-center-dd .nav-link{padding:18px 17px 18px 0;font-size: 16px;color: #007bff !important;max-height: 60px;}
+.main-navbar .all-center-dd .nav-link::after{position: absolute;top: 29px;right: 0;border-top: 5px solid;border-right: 5px solid transparent;border-bottom: 0;border-left: 5px solid transparent;}
+.top-centres-wrap a.nav-link{padding:0;font-size:16px;}
+.listingPage .listing-form-wrap{overflow:hidden}
+.listingPage .listing-form-wrap .form-group{margin-bottom:25px;}
+.listingPage .listing-form-wrap .form-group .form-control{font-size:14px;}
+.listingPage .listing-form-wrap .button-broup label{font-size:15px;margin:0 15px 0 0;}
+.listingPage .listing-form-wrap .button-broup .btn{margin:0 15px 0 0;text-align:center;font-size:13px;}
+.listingPage .listing-form-wrap .button-broup .btn:last-child{margin-right:0;}
+.listingPage .form-btn-wrap{margin-top:5px;}
+.listingPage .form-btn-wrap .btn{margin:0 20px 0 0;min-width:140px;text-align:center;font-size:15px;}
+.listingPage .form-btn-wrap .btn:last-child{margin-right:0;}
+
+/*Table*/
+.listing-table-wrap{overflow:hidden}
+.listing-table-wrap tr td .form-group{margin:0;}
+.listing-table-wrap tr td select{min-width:100px}
+.listing-table-wrap table tr th{border:none;}
+.listing-table-wrap tr th,.listing-table-wrap tr td{font-size:14px;line-height:22px;vertical-align:middle;}
+.listing-table-wrap tr th{line-height:20px;}
+.listing-table-wrap tr td i.fa-download{margin-left:10px;}
+.listing-table-wrap tr td img{max-height:26px;}
+.listing-table-wrap tr td img + img{margin-left:10px;}
+.listing-pagination{-webkit-justify-content:center;justify-content:center;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;}
+.listing-pagination ul.pagination{margin:0;}
+.listing-pagination ul.pagination .page-link{font-size:16px;line-height:16px;border-right:1px solid #dee2e6;padding:10px;min-width:40px;text-align:center;box-shadow: none;}
+.listing-pagination ul.pagination li:last-child.page-link {border-right:none;}
+
+/*Report*/
+.ptb-30{padding-top:30px;padding-bottom:30px;}
+#PatientHistoryModal .modal-lg{max-width:1000px;}
+#PatientHistoryModal .form-group label{font-size: 16px;}
+#PatientHistoryModal .form-group .form-control{font-size:16px;}
+#PatientHistoryModal h5{font-size:22px;}
+#PatientHistoryModal .modal-footer .btn{font-size:16px;}
+#PatientHistoryModal .close{outline:none;}
+
+/*Responsive*/
+@media only screen and (max-width:1024px){
+#PatientHistoryModal .modal-lg{max-width:94%;}
+}
+
+@media only screen and (max-width:992px){}
+
+@media only screen and (max-width:767px){
+.listingPage .main-navbar .navbar{height:4.05rem}
+.listingPage .main-sidebar .nav-wrapper{height:calc(100vh - 3.75rem - 51px)}
+.listingPage .main-content>.main-content-container.container-fluid{padding-left:15px !important;padding-right:15px !important}
+}
+
+@media only screen and (max-width:480px){
+.listingPage .main-navbar .navbar a.navbar-brand{flex:0 0 28.666667%;max-width:28.666667%;}
+.listingPage .main-navbar .navbar a.navbar-brand img#main-logo{max-width:100%}
+}
+
+
+
+

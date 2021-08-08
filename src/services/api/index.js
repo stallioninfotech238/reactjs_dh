@@ -1,27 +1,28 @@
 import {getaxiosInstance} from "../axiosInstance";
-export const getFiltersApi = async (filterType,queryParam) => {
-  return await getaxiosInstance().get(`/api/v1/${filterType}/get${queryParam}`);
+export const getFiltersApi = async (filterType) => {
+  return await getaxiosInstance().get(`/api/${filterType}/names/getall`);
 };
-export const getElasticSearchApi = async (queryParam) => {
-  return await getaxiosInstance().get(`/api/v1/elasticsearch/get${queryParam}`);
+export const getTransactionsApi = async (params) => {
+  return await getaxiosInstance().get(`/api/transactions/list/get?${objToQueryString(params)}`);
 };
-export const getElasticSearchByTextApi = async (str) => {
-  return await getaxiosInstance().get(`/api/v1/elasticsearch/search/based/on/all?_search=${str}`);
+export const setEmergencyApi = async (params) => {
+  return await getaxiosInstance().post(`/api/transaction/emergency/set`,params);
 };
-export const getDetailApi = async (id) => {
-  return await getaxiosInstance().get(`/api/v1/elasticsearch/details/get?_id=${id}`);
+export const setRadiologistApi = async (params) => {
+  return await getaxiosInstance().post(`/api/transaction/radiologist/assign`,params);
 };
-export const inquireApi = async (params) => {
-  return await getaxiosInstance().post(`/api/v1/inquire/create`,params);
-};
-export const signinApi = async (params) => {
-  return await getaxiosInstance().post(`/api/v1/newUsers/login`,params);
-};
-export const signupApi = async (params) => {
-  return await getaxiosInstance().post(`/api/v1/newUsers/create/and/update`,params);
+export const setApproverApi = async (params) => {
+  return await getaxiosInstance().post(`/api/transaction/approver/assign`,params);
 };
 
-
+function objToQueryString(obj) {
+  const keyValuePairs = [];
+  for (const key in obj) {
+    if(obj[key] != '')
+    keyValuePairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
+  }
+  return keyValuePairs.join('&');
+}
 // export const RegistrationApi = async (params) => {
 //   return await getaxiosInstance().post(`/registration/verifyToken`,params);
 // };

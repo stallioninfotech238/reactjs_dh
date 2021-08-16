@@ -472,7 +472,11 @@ let Detail = (props) => {
                                   <label className="custom-control-label" htmlFor={`emergency${i}`}></label>
                                 </div>
                               </td>
-                              <td>{ele.history && ele.history.length > 0 && ele.history[0].content}<br></br> <a className="nav-link" href="upload_pop_up.html"><i className="fas fa-edit"></i></a></td>
+                              <td>{ele.history && ele.history.length > 0 && ele.history[0].content}<br></br>
+                               <a className="nav-link" href="" data-toggle="modal" data-target="#PatientHistoryModal" onClick={()=>{
+                                 console.log('dgfh');
+                               }}><i className="fas fa-edit"></i></a>
+                               </td>
                               <td>{ele.modality && ele.modality.name}</td>
                               <td>{ele.bodypart && ele.bodypart.name}</td>
                               <td className="text-nowrap">{`${ele.image_count && ele.image_count.uploaded}/${ele.image_count && ele.image_count.total}`} <i className="fas fa-download"></i></td>
@@ -492,11 +496,11 @@ let Detail = (props) => {
                                         });
                                         var arr = arrData;
                                         arr[i].radiologist = e1;
-    
+
                                         setArrData(arr);
                                         setTimeout(function () {
                                           setReload(!reload);
-    
+
                                         }, 50);
                                       }
                                     });
@@ -514,27 +518,27 @@ let Detail = (props) => {
                               <td>
                                 <div className="form-group">
                                   <select id="inputState" className="form-control" onChange={(e) => {
-arrRadiologist.forEach((e1) => {
-  if (e1['_id'] === e.target.value) {
-    setApproverApi({
-      "transaction": {
-        "_id": ele._id,
-        "radiologist_approver": {
-          "_id": e1._id,
-          "name": e1.name
-        }
-      }
-    });
-    var arr = arrData;
-    arr[i].radiologist_approver = e1;
+                                    arrRadiologist.forEach((e1) => {
+                                      if (e1['_id'] === e.target.value) {
+                                        setApproverApi({
+                                          "transaction": {
+                                            "_id": ele._id,
+                                            "radiologist_approver": {
+                                              "_id": e1._id,
+                                              "name": e1.name
+                                            }
+                                          }
+                                        });
+                                        var arr = arrData;
+                                        arr[i].radiologist_approver = e1;
 
-    setArrData(arr);
-    setTimeout(function () {
-      setReload(!reload);
+                                        setArrData(arr);
+                                        setTimeout(function () {
+                                          setReload(!reload);
 
-    }, 50);
-  }
-});
+                                        }, 50);
+                                      }
+                                    });
                                   }}
                                     value={getV(ele.radiologist_approver)}>
                                     <option value="">Choose...</option>

@@ -14,6 +14,12 @@ export const setRadiologistApi = async (params) => {
 export const setApproverApi = async (params) => {
   return await getaxiosInstance().post(`/api/transaction/approver/assign`,params);
 };
+export const signinApi = async (params) => {
+  return await getaxiosInstance().post(`/api/users/login`,params);
+};
+export const signupApi = async (params) => {
+  return await getaxiosInstance().post(`/api/transaction/approver/assign`,params);
+};
 
 function objToQueryString(obj) {
   const keyValuePairs = [];

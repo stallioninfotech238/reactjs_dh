@@ -3,15 +3,124 @@ import "./style.css";
 import intelpixel from "../../images/intelpixel.png"; // with import
 import xray from "../../images/xray.jpg";
 import avatar from "../../images/0.jpg";
+import shardsLogo from "../../images/intelpixel.png";
 
 let Report = (props) => {
   useEffect(() => { }, []);
 
   return (
-    
-    <div className="container-fluid listingPage">
+    <div className="container-fluid reportWrap">
       <div className="row">
-        <main className="main-content col-lg-12 col-md-12 col-sm-12 p-0">
+        <aside className="main-sidebar col-12 col-md-3 col-lg-2 px-0">
+          <div className="main-navbar">
+            <nav className="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
+              <a
+                className="navbar-brand w-100 mr-0"
+                href="#"
+                style={{ lineHeight: "25px" }}
+              >
+                <div className="d-table m-auto">
+                  {/* <img
+                    id="main-logo"
+                    className="d-inline-block align-top mr-1"
+                    src={shardsLogo}
+                    alt="Shards Dashboard"
+                    style={{ maxWidth: "25px" }}
+                  /> */}
+                  <span className="d-none d-md-inline ml-1">
+                    Radiology PACS
+                  </span>
+                </div>
+              </a>
+              <a className="toggle-sidebar d-sm-inline d-md-none d-lg-none">
+                <i className="material-icons">&#xE5C4;</i>
+              </a>
+            </nav>
+          </div>
+          <form
+            action="#"
+            className="main-sidebar__search w-100 border-right d-sm-flex d-md-none d-lg-none"
+          >
+            <div className="input-group input-group-seamless ml-3">
+              <div className="input-group-prepend">
+                <div className="input-group-text">
+                  <i className="fas fa-search"></i>
+                </div>
+              </div>
+              <input
+                className="navbar-search form-control"
+                type="text"
+                placeholder="Search for something..."
+                aria-label="Search"
+              />
+            </div>
+          </form>
+          <div className="nav-wrapper">
+            <ul className="nav flex-column">
+              <li className="nav-item">
+                <a className="nav-link " href="#">
+                  <i className="material-icons">face</i>
+                  <span>Jane Doe 35/F</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link " href="#">
+                  <i className="material-icons">person</i>
+                  <span>Doctor : Dr John Doe</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  <i className="material-icons">note_add</i>
+                  <span>Radiologist : Dr ABC John</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  <i className="material-icons">schedule</i>
+                  <span>Scan Time : 12/08/2021 09:10:12</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  <i className="material-icons">hourglass_empty</i>
+                  <span>Upload Time : 12/08/2021 07:09:00</span>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  <i className="material-icons">vertical_split</i>
+                  <span>History</span>
+                  <br />
+                  <span>
+                    Print entire history array here except <br /> for the
+                    deleted true ones
+                  </span>
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-nowrap px-3" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+
+                  <span class="d-none d-md-inline-block">Formats</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-small">
+                  <a class="dropdown-item" href="#">
+                    <i class="material-icons">book</i> Format 1</a>
+                  <a class="dropdown-item" href="#">
+                    <i class="material-icons">book</i> Format 2</a>
+                  <a class="dropdown-item" href="#">
+                    <i class="material-icons">book</i> Format 3</a>
+                  <a class="dropdown-item" href="#">
+                    <i class="material-icons">book</i> Format 4</a>
+                  <a class="dropdown-item" href="#">
+                    <i class="material-icons">book</i> Format 5</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </aside>
+
+        <main className="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
           <div className="main-navbar sticky-top bg-white">
             <nav className="navbar align-items-center navbar-light flex-md-nowrap p-0">
               {/* <a className="navbar-brand mr-0" href="#">
@@ -25,24 +134,32 @@ let Report = (props) => {
                 </span>
               </a> */}
               <ul className="navbar-nav all-center-dd">
-                  <li className="nav-item dropdown">
-                    <a className="nav-link dropdown-toggle text-nowrap" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                      <span className="d-md-inline-block">All Centres</span>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle text-nowrap"
+                    data-toggle="dropdown"
+                    href="#"
+                    role="button"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <span className="d-md-inline-block">All Centres</span>
+                  </a>
+                  <div className="dropdown-menu dropdown-menu-small">
+                    <a className="dropdown-item" href="#">
+                      <i className="material-icons">&#xE7FD;</i> Centre 1
                     </a>
-                    <div className="dropdown-menu dropdown-menu-small">
-                      <a className="dropdown-item" href="#">
-                        <i className="material-icons">&#xE7FD;</i> Centre 1
-                      </a>
-                      <a className="dropdown-item text-danger" href="#">
-                        <i className="material-icons text-danger">&#xE7FD;</i> Centre 2
-                      </a>
-                    </div>
-                  </li>
+                    <a className="dropdown-item text-danger" href="#">
+                      <i className="material-icons text-danger">&#xE7FD;</i>{" "}
+                      Centre 2
+                    </a>
+                  </div>
+                </li>
+              </ul>
 
-                </ul>
-
-
-              <form action="#" className="main-navbar__search w-100 d-none d-md-flex d-lg-flex"
+              <form
+                action="#"
+                className="main-navbar__search w-100 d-none d-md-flex d-lg-flex"
               >
                 <div className="input-group input-group-seamless ml-3">
                   {/* <div className="input-group-prepend">
@@ -137,8 +254,16 @@ let Report = (props) => {
                   </div>
                 </li>
               </ul>
-              
-              <a href="" title="Patient History" className="btn btn-primary btn-history" data-toggle="modal" data-target="#PatientHistoryModal">Patient History</a>
+
+              <a
+                href=""
+                title="Patient History"
+                className="btn btn-primary btn-history"
+                data-toggle="modal"
+                data-target="#PatientHistoryModal"
+              >
+                Patient History
+              </a>
 
               <nav className="nav">
                 <a
@@ -157,28 +282,29 @@ let Report = (props) => {
 
           <div className="main-content-container container-fluid px-4">
             {/* <div className="page-header row no-gutters py-4"></div> */}
-            
+
             <div className="page-header row no-gutters ptb-30">
               <div className="col-12 col-sm-4 text-center text-sm-left mb-0">
-                {/* <span className="text-uppercase page-subtitle">Report</span> */}
-                <h3 className="page-title">Report</h3>
+                <span className="text-uppercase page-subtitle">Report</span>
+                {/* <h3 className="page-title">Report</h3> */}
               </div>
             </div>
 
             <div className="row">
-              <div className="col-lg-9 col-md-12">                
+              <div className="col-lg-9 col-md-12">
                 <div className="card card-small mb-30">
                   <div className="card-body">
                     <form className="add-new-post">
-                    
-                      <div id="editor-container" className="add-new-post__editor mb-1"></div>
+                      <div
+                        id="editor-container"
+                        className="add-new-post__editor mb-1"
+                      ></div>
                     </form>
                   </div>
                 </div>
               </div>
-              
+
               <div className="col-lg-3 col-md-12">
-                
                 <div className="card card-small mb-30">
                   <div className="card-header border-bottom">
                     <h6 className="m-0">Actions</h6>
@@ -190,18 +316,19 @@ let Report = (props) => {
                           <i className="material-icons mr-1">flag</i>
                           <strong className="mr-1">Status:</strong> Critical
                         </span>
-                        
                       </li>
                       <li className="list-group-item d-flex px-3">
                         <button className="btn btn-sm btn-outline-accent">
-                          <i className="material-icons">save</i> Save Draft</button>
+                          <i className="material-icons">save</i> Save Draft
+                        </button>
                         <button className="btn btn-sm btn-accent ml-auto">
-                          <i className="material-icons">file_copy</i> Publish</button>
+                          <i className="material-icons">file_copy</i> Publish
+                        </button>
                       </li>
                     </ul>
                   </div>
                 </div>
-               
+
                 <div className="card card-small mb-30">
                   <div className="card-header border-bottom">
                     <h6 className="m-0">Categories</h6>
@@ -210,31 +337,87 @@ let Report = (props) => {
                     <ul className="list-group list-group-flush">
                       <li className="list-group-item px-3 pb-2">
                         <div className="custom-control custom-checkbox mb-1">
-                          <input type="checkbox" className="custom-control-input" id="category1" checked />
-                          <label className="custom-control-label" for="category1">Abnormal</label>
+                          <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id="category1"
+                            checked
+                          />
+                          <label
+                            className="custom-control-label"
+                            for="category1"
+                          >
+                            Abnormal
+                          </label>
                         </div>
                         <div className="custom-control custom-checkbox mb-1">
-                          <input type="checkbox" className="custom-control-input" id="category2" checked />
-                          <label className="custom-control-label" for="category2">Normal</label>
+                          <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id="category2"
+                            checked
+                          />
+                          <label
+                            className="custom-control-label"
+                            for="category2"
+                          >
+                            Normal
+                          </label>
                         </div>
                         <div className="custom-control custom-checkbox mb-1">
-                          <input type="checkbox" className="custom-control-input" id="category3" />
-                          <label className="custom-control-label" for="category3">TB</label>
+                          <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id="category3"
+                          />
+                          <label
+                            className="custom-control-label"
+                            for="category3"
+                          >
+                            TB
+                          </label>
                         </div>
                         <div className="custom-control custom-checkbox mb-1">
-                          <input type="checkbox" className="custom-control-input" id="category4" />
-                          <label className="custom-control-label" for="category4">ILD</label>
+                          <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id="category4"
+                          />
+                          <label
+                            className="custom-control-label"
+                            for="category4"
+                          >
+                            ILD
+                          </label>
                         </div>
                         <div className="custom-control custom-checkbox mb-1">
-                          <input type="checkbox" className="custom-control-input" id="category5" />
-                          <label className="custom-control-label" for="category5">Mass</label>
+                          <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id="category5"
+                          />
+                          <label
+                            className="custom-control-label"
+                            for="category5"
+                          >
+                            Mass
+                          </label>
                         </div>
                       </li>
                       <li className="list-group-item d-flex px-3">
                         <div className="input-group">
-                          <input type="text" className="form-control" placeholder="New category" aria-label="Add new category" aria-describedby="basic-addon2" />
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="New category"
+                            aria-label="Add new category"
+                            aria-describedby="basic-addon2"
+                          />
                           <div className="input-group-append">
-                            <button className="btn btn-white px-2" type="button">
+                            <button
+                              className="btn btn-white px-2"
+                              type="button"
+                            >
                               <i className="material-icons">add</i>
                             </button>
                           </div>
@@ -243,18 +426,72 @@ let Report = (props) => {
                     </ul>
                   </div>
                 </div>
-                
+
+                <div className="card card-small mb-30">
+                  <div className="card-header border-bottom">
+                    <h6 className="m-0">New Report Content Category</h6>
+                  </div>
+                  <div className="card-body p-0">
+                    <ul className="list-group list-group-flush">
+                      <li className="list-group-item d-flex px-3">
+                        <form>
+                          <div className="form-row">
+                            <div className="form-group col-md-6">
+                              <input
+                                type="text"
+                                className="form-control is-valid"
+                                id="validationServer01"
+                                placeholder="Category Name"
+                                required
+                              />
+                            </div>
+                            <div className="form-group col-md-6">
+                              <select className="form-control is-invalid">
+                                <option selected>Choose...</option>
+                                <option>Checkbox Testgroup 1</option>
+                                <option>Checkbox Testgroup 2</option>
+                                <option>Checkbox Testgroup 3</option>
+                                <option>Checkbox Testgroup 4</option>
+                                <option>Checkbox Testgroup 5</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <button className="btn btn-sm btn-accent">
+                            <i className="material-icons">file_copy</i> Publish
+                          </button>
+                        </form>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
-
           </div>
 
-          <div className="modal fade" id="PatientHistoryModal" tabindex="-1" role="dialog" aria-labelledby="PatientHistoryLabel" aria-hidden="true">
-            <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div
+            className="modal fade"
+            id="PatientHistoryModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="PatientHistoryLabel"
+            aria-hidden="true"
+          >
+            <div
+              className="modal-dialog modal-dialog-centered modal-lg"
+              role="document"
+            >
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title" id="PatientHistoryLabel">Patient History</h5>
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <h5 className="modal-title" id="PatientHistoryLabel">
+                    Patient History
+                  </h5>
+                  <button
+                    type="button"
+                    className="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
@@ -264,30 +501,63 @@ let Report = (props) => {
                     <div className="form-row">
                       <div className="form-group col-md-6">
                         <label for="feFirstName">First Name</label>
-                        <input type="text" className="form-control" id="feFirstName" placeholder="First Name" /> </div>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="feFirstName"
+                          placeholder="First Name"
+                        />{" "}
+                      </div>
                       <div className="form-group col-md-6">
                         <label for="feLastName">Last Name</label>
-                        <input type="text" className="form-control" id="feLastName" placeholder="Last Name"  /> </div>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="feLastName"
+                          placeholder="Last Name"
+                        />{" "}
+                      </div>
                     </div>
                     <div className="form-row">
                       <div className="form-group col-md-6">
                         <label for="feAge">Age</label>
-                        <input type="number" className="form-control" id="feAge" placeholder="Age" /> </div>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="feAge"
+                          placeholder="Age"
+                        />{" "}
+                      </div>
                       <div className="form-group col-md-6">
                         <label for="feGender">Gender</label>
-                        <input type="text" className="form-control" id="feGender" placeholder="Gender" /> </div>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="feGender"
+                          placeholder="Gender"
+                        />{" "}
+                      </div>
                     </div>
-                    <div className="form-row"> 
+                    <div className="form-row">
                       <div className="form-group col-md-12 mb-0">
-                        <label for="feDescription">History <i className="fas fa-plus-square"></i></label>
-                        <textarea className="form-control" name="feDescription" rows="7" placeholder="Type somthing here..."></textarea>
+                        <label for="feDescription">
+                          History <i className="fas fa-plus-square"></i>
+                        </label>
+                        <textarea
+                          className="form-control"
+                          name="feDescription"
+                          rows="7"
+                          placeholder="Type somthing here..."
+                        ></textarea>
                       </div>
                     </div>
                   </form>
                 </div>
 
                 <div className="modal-footer justify-content-center">
-                  <button type="submit" className="btn btn-primary">Update History</button>
+                  <button type="submit" className="btn btn-primary">
+                    Update History
+                  </button>
                 </div>
               </div>
             </div>
@@ -340,13 +610,7 @@ let Report = (props) => {
           </footer>
         </main>
       </div>
-      
-     
-    
-    
     </div>
-
-
- );
+  );
 };
 export default Report;

@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "./style.css";
 import intelpixel from "../../images/intelpixel.png"; // with import
-import { signupApi } from "../../services/api";
+import { signupApi, getLabApi, getRoleApi } from "../../services/api";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useHistory } from "react-router-dom";
@@ -26,8 +26,37 @@ let Signup = (props) => {
   });
   const [resMessage, setResMessage] = useState("");
   const [resType, setResType] = useState("");
+  const [arrRole, setArrRole] = useState([]);
+  const [arrLab, setArrLab] = useState([]);
 
-  useEffect(() => { }, []);
+  useEffect(() => {
+    getLabs();
+    getRoles();
+  }, []);
+  const getLabs = () => {
+    getLabApi().then((res) => {
+      if (res.status) {
+        setArrLab(res.data ?? []);
+      }
+    })
+      .catch((e) => {
+        console.log("ERROR");
+        console.log(e);
+      });
+
+  }
+  const getRoles = () => {
+    getRoleApi().then((res) => {
+      if (res.status) {
+        setArrRole(res.data ?? []);
+      }
+    })
+      .catch((e) => {
+        console.log("ERROR");
+        console.log(e);
+      });
+
+  }
   const signup = () => {
 
     if (formInput.password === '' || formInput.password_again === '' || formInput.password !== formInput.password_again) {
@@ -54,6 +83,10 @@ let Signup = (props) => {
         console.log("ERROR");
         console.log(e);
       });
+  }
+  if (localStorage.getItem('user') != null) {
+    history.push('/');
+
   }
   return (
     <div className="container-fluid signupPage">
@@ -158,13 +191,13 @@ let Signup = (props) => {
                       <div className={`row mt-4 ml-3`} id="gen">
 
                         <div className={`row align-items-center`} style={{ width: "50%" }}>
-                          <input type="radio" id="male" name="gender" value={formInput.gender} onChange={(e) => {
+                          <input type="radio" id="male" name="gender" value={'male'} onChange={(e) => {
                             setFormInput({ ...formInput, gender: e.target.value });
                           }} />
                           <div className={"ml-2"} style={{ fontSize: "16px", fontWeight: "500" }} >Male</div>
                         </div>
                         <div className={`row align-items-center`} style={{ width: "50%" }}>
-                          <input type="radio" id="female" name="gender" value={formInput.gender} onChange={(e) => {
+                          <input type="radio" id="female" name="gender" value={'female'} onChange={(e) => {
                             setFormInput({ ...formInput, gender: e.target.value });
                           }} />
                           <div className={"ml-2"} style={{ fontSize: "16px", fontWeight: "500" }} >Female</div>
@@ -191,28 +224,29 @@ let Signup = (props) => {
                     </div>
                   </div>
                   <div className='row'>
-                    <div className={`w-50 px-4 form-group ${formInput.password && formInput.password.trim() === '' ? '' : 'active'}`}>
-                      <input
-                        type="password"
-                        className="form-control px-0"
-                        id="Lab"
-                        value={formInput.password}
-                        onChange={(e) => {
-                          setFormInput({ ...formInput, password: e.target.value });
-                        }}
-                      />
+                    <div className={`w-50 px-4 form-group ${formInput.lab_id && formInput.lab_id.trim() === '' ? '' : 'active'}`}>
+                      <select id="Lab" className="form-control p-0 mt-3" name="Lab" value={formInput.lab_id} onChange={(e) => {
+                        setFormInput({ ...formInput, lab_id: e.target.value });
+                      }}>
+                        <option value="">Select Lab</option>
+                        {arrLab.map((e) => {
+                          return <option value={e['_id']} key={e['_id']} >{e['name']}</option>
+                        })}
+
+                      </select>
                       <label className={"ml-2"} htmlFor="Lab">Lab</label>
                     </div>
-                    <div className={`w-50 px-4 form-group ${formInput.password_again && formInput.password_again.trim() === '' ? '' : 'active'}`}>
-                      <input
-                        type="password"
-                        className="form-control px-0"
-                        id="Role"
-                        value={formInput.password_again}
-                        onChange={(e) => {
-                          setFormInput({ ...formInput, password_again: e.target.value });
-                        }}
-                      />
+                    <div className={`w-50 px-4 form-group ${formInput.role && formInput.role.trim() === '' ? '' : 'active'}`}>
+                      
+                      <select id="Role" className="form-control p-0 mt-3" name="Role" value={formInput.role} onChange={(e) => {
+                        setFormInput({ ...formInput, role: e.target.value });
+                      }}>
+                        <option value="">Select Role</option>
+                        {arrRole.map((e) => {
+                          return <option value={e['_id']} key={e['_id']} >{e['name']}</option>
+                        })}
+
+                      </select>
                       <label className={"ml-2"} htmlFor="Role">Role</label>
                     </div>
                   </div>
@@ -253,7 +287,7 @@ let Signup = (props) => {
                 </form>
               </div>
 
-
+              {/* 
               <div className="register-btn-wrap">
                 <div className="social-icon-btn-wrap">
                   <a href="#" className="facebook-btn">
@@ -266,7 +300,7 @@ let Signup = (props) => {
                     <i className="fab fa-apple"></i> Continue with Apple
                   </a>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="reg-box-note">

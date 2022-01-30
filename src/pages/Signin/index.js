@@ -29,6 +29,7 @@ let Signin = (props) => {
       .then((res) => {
         console.log(res);
         if (res.status) {
+          localStorage.setItem('user',JSON.stringify(res.data));
           history.push('/');
         }
         else {
@@ -40,6 +41,11 @@ let Signin = (props) => {
         console.log("ERROR");
         console.log(e);
       });
+  }
+  if(localStorage.getItem('user') != null)
+  {
+    history.push('/');
+
   }
   return (
     <div className="container-fluid signinPage">
@@ -123,7 +129,7 @@ let Signin = (props) => {
                 </form>
               </div>
 
-              <div className="register-btn-wrap">
+              {/* <div className="register-btn-wrap">
                 <div className="social-icon-btn-wrap">
                   <a href="#" className="facebook-btn">
                     <i className="fab fa-facebook-f"></i> Continue with Facebook
@@ -135,7 +141,7 @@ let Signin = (props) => {
                     <i className="fab fa-apple"></i> Continue with Apple
                   </a>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="reg-box-note">

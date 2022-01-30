@@ -5,16 +5,17 @@
 .signupPage .register-logo-wrap a img{max-width:100%;}
 .signupPage .register-wrap{min-height:calc(100vh - 87px) !important;background:#fff;padding-top:30px;padding-bottom:100px;-webkit-align-items:center;align-items:center;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:center;justify-content:center;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;}
 .signupPage .register-wrap a{-webkit-transition:all 0.35s ease 0s;transition:all 0.35s ease 0s;}
-.signupPage .register-box{padding:55px 0;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;width:1300px;}
+.signupPage .register-box{padding:55px 0;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;width:1000px;}
 .signupPage .register-head{text-align:center;font-size:20px;font-weight:500;}
 .signupPage .register-head h2{font-weight:bold;font-size:3.7rem;line-height:1.3;color:#3d5170;margin:0 0 25px;}
 .signupPage .register-head p:last-child{margin-bottom:0;}
-.signupPage .register-box .register-form-wrap{width:66.66%;padding:20px 70px 20px 0;border-right:2px solid #9a9a9a;}
-.signupPage .register-box .register-btn-wrap{width:33.33%;padding-left:70px;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:center;justify-content:center;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;}
+.signupPage .register-box .register-form-wrap{width:100%;padding:20px 70px 20px 0;}
 .signupPage .register-form-wrap .form-group{position:relative;margin-bottom:30px;}
 .signupPage .register-form-wrap .form-group input{-webkit-border-radius:0;border-radius:0;;font-size:18px;line-height:22px;font-weight:normal;border:none;border-bottom:1px solid #DADADA;padding:15px 17px 15px;-webkit-box-shadow:none;box-shadow:none;}
+.signupPage .register-form-wrap .form-group select{-webkit-border-radius:0;border-radius:0;;font-size:18px;line-height:22px;font-weight:normal;border:none;border-bottom:1px solid #DADADA;-webkit-box-shadow:none;box-shadow:none;}
 .signupPage .register-form-wrap .form-group label{margin:0;pointer-events:none;font-weight:500;font-size:18px;line-height:20px;color:#3d5170;position:absolute;top:14px;left:17px;-webkit-transition:all 0.35s ease 0s;transition:all 0.35s ease 0s;}
 .signupPage .register-form-wrap .form-group input:focus ~ label,.register-form-wrap .form-group.active input ~ label{top:-15px;font-size:16px;}
+.signupPage .register-form-wrap .form-group select:focus ~ label,.register-form-wrap .form-group.active select ~ label{top:-15px;font-size:16px;}
 .signupPage .register-form-wrap .box-extra-info{font-size:16px;font-weight:500;white-space:nowrap;}
 .signupPage .register-form-wrap .box-extra-info a{text-decoration:none;}
 .signupPage .reg-frm-action  .btn{-webkit-border-radius:100px;border-radius:100px;font-size:20px;line-height:22px;font-weight:500;padding:13px 30px 15px;min-width:170px;text-align:center;border:2px solid #007bff;background:transparent;color:#007bff;outline:none;}

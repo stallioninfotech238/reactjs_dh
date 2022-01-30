@@ -14,11 +14,35 @@ export const setRadiologistApi = async (params) => {
 export const setApproverApi = async (params) => {
   return await getaxiosInstance().post(`/api/transaction/approver/assign`,params);
 };
+export const getRoleApi = async () => {
+  return await getaxiosInstance().get(`/api/roles/names/get`);
+};
+export const getLabApi = async () => {
+  return await getaxiosInstance().get(`/api/labs/names/get`);
+};
 export const signinApi = async (params) => {
-  return await getaxiosInstance().post(`/api/users/login`,params);
+  return await getaxiosInstance().post(`/api/user/login`,params);
 };
 export const signupApi = async (params) => {
-  return await getaxiosInstance().post(`/api/transaction/approver/assign`,params);
+  return await getaxiosInstance().post(`/api/user/signup`,params);
+};
+export const addHistoryApi = async (params) => {
+  return await getaxiosInstance().post(`/api/transaction/report/create`,params);
+};
+export const updateHistoryApi = async (params) => {
+  return await getaxiosInstance().post(`/api/transaction/history/edit`,params);
+};
+export const getPatientDetailApi = async (params) => {
+  return await getaxiosInstance().get(`/api/report/transaction/patient/details/get?${objToQueryString(params)}`);
+};
+export const getCategoryApi = async () => {
+  return await getaxiosInstance().get(`/api/categories/names/get`);
+};
+export const updateStatusApi = async (params) => {
+  return await getaxiosInstance().post(`/api/report/status/update`,params);
+};
+export const getReportFormatApi = async () => {
+  return await getaxiosInstance().get(`/api/reportformat/get`);
 };
 
 function objToQueryString(obj) {

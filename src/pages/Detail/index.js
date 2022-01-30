@@ -2,18 +2,22 @@ import React, { Fragment, useState, useEffect } from "react";
 import "./style.css";
 import intelpixel from "../../images/intelpixel.png"; // with import
 import xray from "../../images/xray.jpg";
-import avatar from "../../images/0.jpg";
+import avatar from "../../images/0.png";
 import queryString from "query-string";
 import NotFound from "../../components/notFound";
-import { getFiltersApi, getTransactionsApi, setEmergencyApi, setRadiologistApi, setApproverApi } from "../../services/api";
+import { getFiltersApi, getTransactionsApi, setEmergencyApi, setRadiologistApi, setApproverApi, addHistoryApi, updateHistoryApi } from "../../services/api";
 import { urlEndPoint } from "../../services/axiosInstance";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import moment from "moment";
+import { useHistory } from "react-router-dom";
+import CircularProgress from "@material-ui/core/CircularProgress";
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 let Detail = (props) => {
+  const history = useHistory();
+
   const id = queryString.parse(props.location.search)._id;
   const [arrRadiologist, setArrRadiologist] = useState([]);
   const [arrBodypart, setArrBodypart] = useState([]);
@@ -31,7 +35,9 @@ let Detail = (props) => {
   const [status, setStatus] = useState('');
   const [resMessage, setResMessage] = useState("");
   const [resType, setResType] = useState("");
-
+  const [addHistory, setAddHistory] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [openPopup, setOpenPopup] = useState('');
   const sendMessage = () => {
     // inquireApi({
     //   inquire: {
@@ -109,8 +115,77 @@ let Detail = (props) => {
       });
 
   }
+  const addHistoryCall = () => {
+    addHistoryApi({
+      'transactions': {
+        'patient': {
+          'name': addHistory['ahFirstName'] + ' ' + addHistory['ahLastName'],
+          'gender': addHistory['ahGender'],
+          'age': addHistory['ahAge']
+        },
+        'history': (addHistory['ahHistory'] ?? []).map((e) => {
+          return { 'content': e }
+        })
+      }
+    }).then((res) => {
+      setLoading(false);
+      if (res.status) {
+        setOpenPopup('');
+        setResType("success");
+      }
+      else {
+        setResType("error");
+      }
+      setResMessage(res.message);
+    })
+      .catch((e) => {
+        setResType("error");
+        setLoading(false);
+        setResMessage(`${e}`);
+        console.log("ERROR");
+        console.log(e);
+      });
+
+  }
+  const updateHistoryCall = () => {
+    updateHistoryApi({
+      'transaction': {
+        '_id': addHistory['_id'],
+        'patient': {
+          'name': addHistory['ahFirstName'] + ' ' + addHistory['ahLastName'],
+          'gender': addHistory['ahGender'],
+          'age': addHistory['ahAge']
+        },
+        'history': (addHistory['ahHistory'] ?? []).map((e) => {
+          return { 'content': e }
+        })
+      }
+    }).then((res) => {
+      setLoading(false);
+      if (res.code === 200) {
+        setOpenPopup('');
+        setResType("success");
+      }
+      else {
+        setResType("error");
+      }
+      setResMessage(res.message);
+    })
+      .catch((e) => {
+        setResType("error");
+        setLoading(false);
+        setResMessage(`${e}`);
+        console.log("ERROR");
+        console.log(e);
+      });
+
+  }
   // if (!id) return <NotFound />;
   // if (!data) return <div />;
+  if (localStorage.getItem('user') == null) {
+    history.push('/signin');
+
+  }
   return (
     <div className="container-fluid listingPage">
       <div className="row">
@@ -222,10 +297,12 @@ let Detail = (props) => {
                     aria-expanded="false"
                   >
                     <img
+
+style={{width:'40px',height:'40px'}}
                       className="user-avatar rounded-circle mr-2"
                       src={avatar}
                     />
-                    <span className="d-md-inline-block">Sierra Brooks</span>
+                    <span className="d-md-inline-block">{JSON.parse(localStorage.getItem('user'))['username']}</span>
                   </a>
                   <div className="dropdown-menu dropdown-menu-small">
                     <a className="dropdown-item" href="#">
@@ -233,15 +310,23 @@ let Detail = (props) => {
                     </a>
 
                     <div className="dropdown-divider"></div>
-                    <a className="dropdown-item text-danger" href="#">
-                      <i className="material-icons text-danger">&#xE879;</i>{" "}
+                    <a className="dropdown-item text-danger" href="#" onClick={() => {
+                      localStorage.removeItem('user');
+                      history.push('/signin');
+                    }}>
+                      <i className="material-icons text-danger" >&#xE879;</i>{" "}
                       Logout{" "}
                     </a>
                   </div>
                 </li>
               </ul>
 
-              <a href="" title="Patient History" className="btn btn-primary btn-history" data-toggle="modal" data-target="#PatientHistoryModal">Patient History</a>
+              <a onClick={() => {
+                setLoading(false);
+                setOpenPopup('show');
+
+                setAddHistory({ 'ahFirstName': '', 'ahLastName': '', 'ahAge': '', 'ahGender': '', 'ahHistory': [''], 'ahAction': 'Add History' });
+              }} href="" title="Patient History" className="btn btn-primary btn-history" data-toggle="modal" data-target="">Patient History</a>
 
             </nav>
           </div>
@@ -444,7 +529,14 @@ let Detail = (props) => {
                         <tbody>
                           {arrData.map((ele, i) => {
 
-                            return <tr>
+                            return <tr style={{ position: 'relative' }}>
+                              {/* <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, left: 0 }} 
+                              // onClick={() => {
+                              //   // history.push(`/report/${ele._id}`);
+                              // }}
+                              >
+
+                              </div> */}
                               <td>{i}</td>
                               <td>{ele.patient && ele.patient._id}</td>
                               <td>{ele.patient && ele.patient.name}</td>
@@ -473,13 +565,15 @@ let Detail = (props) => {
                                 </div>
                               </td>
                               <td>{ele.history && ele.history.length > 0 && ele.history[0].content}<br></br>
-                               <a className="nav-link" href="" data-toggle="modal" data-target="#PatientHistoryModal" onClick={()=>{
-                                 console.log('dgfh');
-                               }}><i className="fas fa-edit"></i></a>
-                               </td>
+                                <a className="nav-link" href="" data-toggle="modal" data-target="" onClick={() => {
+                                  setLoading(false);
+                                  setOpenPopup('show');
+                                  setAddHistory({ '_id': ele['_id'], 'ahFirstName': ele.patient && ele.patient.name && ele.patient.name.split(" ") && ele.patient.name.split(" ")[0], 'ahLastName': ele.patient && ele.patient.name && ele.patient.name.split(" ") && ele.patient.name.split(" ")[1], 'ahAge': ele.patient && ele.patient.age, 'ahGender': ele.patient && ele.patient.gender, 'ahHistory': (ele.history ?? []).map((e) => e['content']).length == 0 ? [''] : (ele.history ?? []).map((e) => e['content']) , 'ahAction': 'Update History' });
+                                }}><i className="fas fa-edit"></i></a>
+                              </td>
                               <td>{ele.modality && ele.modality.name}</td>
                               <td>{ele.bodypart && ele.bodypart.name}</td>
-                              <td className="text-nowrap">{`${ele.image_count && ele.image_count.uploaded}/${ele.image_count && ele.image_count.total}`} <i className="fas fa-download"></i></td>
+                              <td className="text-nowrap">{`${(ele.image_count && ele.image_count.uploaded) ?? 0}/${(ele.image_count && ele.image_count.total) ?? 0}`} <i className="fas fa-download"></i></td>
                               <td>
                                 <div className="form-group">
                                   <select id="inputState" className="form-control" onChange={(e) => {
@@ -552,8 +646,8 @@ let Detail = (props) => {
                               <td className="text-nowrap"> <img src={"https://img.icons8.com/nolan/24/doctors-bag.png"} /> <img src={"https://img.icons8.com/nolan/24/doctors-bag.png"} /> </td>
                               <td>{ele.report_status}</td>
                               <td><i className="fas fa-bell"></i></td>
-                              <td className="text-nowrap">10:45 AM</td>
-                              <td className="text-nowrap">12:45 PM</td>
+                              <td className="text-nowrap">{`${ele.scan_timestamp && moment(ele.scan_timestamp, 'YYYY-MM-DDTHH:mm:ss:sssZ').format('DD/MM/YYYY')} ${ele.scan_timestamp && moment(ele.scan_timestamp, 'YYYY-MM-DDTHH:mm:ss:sssZ').format('hh:mm a')}`}</td>
+                              <td className="text-nowrap">{`${ele.upload_timestamp && moment(ele.upload_timestamp, 'YYYY-MM-DDTHH:mm:ss:sssZ').format('DD/MM/YYYY')} ${ele.upload_timestamp && moment(ele.upload_timestamp, 'YYYY-MM-DDTHH:mm:ss:sssZ').format('hh:mm a')}`}</td>
                               <td className="text-nowrap">12:48 PM</td>
                               <td>Pending</td>
                             </tr>
@@ -568,7 +662,7 @@ let Detail = (props) => {
               </div>
             </div>
 
-            <div className="row mb-30">
+            {/* <div className="row mb-30">
               <div className="col listing-pagination">
                 <ul className="pagination">
                   <li className="page-item">
@@ -588,16 +682,18 @@ let Detail = (props) => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> */}
 
           </div>
 
-          <div className="modal fade" id="PatientHistoryModal" tabindex="-1" role="dialog" aria-labelledby="PatientHistoryLabel" aria-hidden="true">
+          <div className={`modal fade ${openPopup}`} id="PatientHistoryModal" tabindex="-1" role="dialog" aria-labelledby="PatientHistoryLabel" aria-hidden="true" style={{ display: openPopup === 'show' ? 'block' : 'none', backgroundColor: '#00000033' }} >
             <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title" id="PatientHistoryLabel">Patient History</h5>
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={() => {
+                    setOpenPopup('');
+                  }}>
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
@@ -607,36 +703,81 @@ let Detail = (props) => {
                     <div className="form-row">
                       <div className="form-group col-md-6">
                         <label for="feFirstName">First Name</label>
-                        <input type="text" className="form-control" id="feFirstName" placeholder="First Name" /> </div>
+                        <input type="text" className="form-control" id="feFirstName" placeholder="First Name" value={addHistory['ahFirstName']} onChange={(e) => {
+                          setAddHistory({ ...addHistory, 'ahFirstName': e.target.value });
+                        }} /> </div>
                       <div className="form-group col-md-6">
                         <label for="feLastName">Last Name</label>
-                        <input type="text" className="form-control" id="feLastName" placeholder="Last Name" /> </div>
+                        <input type="text" className="form-control" id="feLastName" placeholder="Last Name" value={addHistory['ahLastName']} onChange={(e) => {
+                          setAddHistory({ ...addHistory, 'ahLastName': e.target.value });
+                        }} /> </div>
                     </div>
                     <div className="form-row">
                       <div className="form-group col-md-6">
                         <label for="feAge">Age</label>
-                        <input type="number" className="form-control" id="feAge" placeholder="Age" /> </div>
+                        <input type="number" className="form-control" id="feAge" placeholder="Age" value={addHistory['ahAge']} onChange={(e) => {
+                          setAddHistory({ ...addHistory, 'ahAge': e.target.value });
+                        }} /> </div>
                       <div className="form-group col-md-6">
-                        <label for="feGender">Gender</label>
-                        <input type="text" className="form-control" id="feGender" placeholder="Gender" />  </div>
+                        <label for="gen">Gender</label>
+                        <div className={`row mt-2 ml-3`} id="gen">
+
+                          <div className={`row align-items-center`} style={{ width: "50%" }}>
+                            <input type="radio" id="male" name="gender" value={'male'} checked={addHistory['ahGender'] === 'male'} onChange={(e) => {
+                              setAddHistory({ ...addHistory, 'ahGender': e.target.value });
+                            }} />
+                            <div className={"ml-2"} style={{ fontSize: "16px", fontWeight: "500" }} >Male</div>
+                          </div>
+                          <div className={`row align-items-center`} style={{ width: "50%" }}>
+                            <input type="radio" id="female" name="gender" value={'female'} checked={addHistory['ahGender'] === 'female'} onChange={(e) => {
+                              setAddHistory({ ...addHistory, 'ahGender': e.target.value });
+                            }} />
+                            <div className={"ml-2"} style={{ fontSize: "16px", fontWeight: "500" }} >Female</div>
+                          </div>
+                        </div> </div>
                     </div>
                     <div className="form-row">
                       <div className="form-group col-md-12 mb-0">
-                        <label for="feDescription">History <i className="fas fa-plus-square"></i></label>
-                        <textarea className="form-control" name="feDescription" rows="7" placeholder="Type somthing here..."></textarea>
+                        <label for="feDescription">History <i className="fas fa-plus-square" onClick={() => {
+                          var arr = addHistory['ahHistory'] ?? [];
+                          arr.push('');
+                          setAddHistory({ ...addHistory, 'ahHistory': arr });
+                        }}></i></label>
+                        {(addHistory['ahHistory'] ?? []).map((e, index) => {
+                          return <div style={{ position: 'relative' }} > <textarea style={{ width: 'calc(100% - 20px)' }} className="form-control mb-2" value={e} onChange={(e) => {
+                            var arr = addHistory['ahHistory'] ?? [];
+                            arr[index] = e.target.value;
+                            setAddHistory({ ...addHistory, 'ahHistory': arr });
+                          }} name="feDescription" rows="4" placeholder="Type somthing here..."></textarea>
+                            <i className="fas fa-trash-alt fa-lg" style={{ position: 'absolute', top: 4, right: 0, color: 'red' }} onClick={() => {
+                              var arr = addHistory['ahHistory'] ?? [];
+                              arr.splice(index, 1);
+                              setAddHistory({ ...addHistory, 'ahHistory': arr });
+                            }}></i>
+
+                          </div>
+                        })}
+
                       </div>
                     </div>
                   </form>
                 </div>
 
                 <div className="modal-footer justify-content-center">
-                  <button type="submit" className="btn btn-primary">Update History</button>
+                  <button type="submit" className="btn btn-primary p-0" style={{ width: '200px', height: '40px' }} onClick={() => {
+                    setLoading(true);
+                    if (addHistory['ahAction'] === 'Add History') {
+                      addHistoryCall();
+                    } else {
+                      updateHistoryCall();
+                    }
+                  }}>{loading ? <CircularProgress color='red' style={{ width: 35, height: 35 }} /> : addHistory['ahAction']}</button>
                 </div>
               </div>
             </div>
           </div>
 
-          <footer className="main-footer d-flex p-2 px-3 bg-white border-top">
+          {/* <footer className="main-footer d-flex p-2 px-3 bg-white border-top">
             <ul className="nav">
               <li className="nav-item">
                 <a className="nav-link" href="#">
@@ -680,7 +821,7 @@ let Detail = (props) => {
                 DesignRevision
               </a>
             </span>
-          </footer>
+          </footer> */}
         </main>
       </div>
 

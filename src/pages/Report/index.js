@@ -2,16 +2,86 @@ import React, { Fragment, useState, useEffect } from "react";
 import "./style.css";
 import intelpixel from "../../images/intelpixel.png"; // with import
 import xray from "../../images/xray.jpg";
-import avatar from "../../images/0.jpg";
+import avatar from "../../images/0.png";
 import shardsLogo from "../../images/intelpixel.png";
+import { useHistory } from "react-router-dom";
+import { getPatientDetailApi, updateStatusApi, getCategoryApi, getReportFormatApi } from "../../services/api";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import NotFound from "../../components/notFound";
+import moment from "moment";
+import JoditEditor from "jodit-react";
+
 
 let Report = (props) => {
-  useEffect(() => { }, []);
+  const history = useHistory();
+  const [data, setData] = useState(undefined);
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('Pending');
+  const [arrCategory, setArrCategory] = useState([]);
+  const [arrFormat, setArrFormat] = useState([]);
+  const [editorState, setEditorState] = useState();
 
+  useEffect(() => {
+
+    getData();
+  }, []);
+  const getData = () => {
+    getCategoryApi().then((res) => {
+      if (res.code === 200) {
+        setArrCategory(res.data ?? []);
+      }
+
+    })
+      .catch((e) => {
+        console.log(e);
+      });
+    getReportFormatApi().then((res) => {
+      if (res.code === 200) {
+        setArrFormat(res.data ?? []);
+      }
+
+    })
+      .catch((e) => {
+        console.log(e);
+      });
+    getPatientDetailApi({ '_id': props.match.params.id }).then((res) => {
+      setLoading(false);
+      if (res.status && (res.data ?? []).length > 0) {
+        setData((res.data ?? [])[0]);
+      }
+      // else {
+      //   setArrData([]);
+      // }
+    })
+      .catch((e) => {
+        setLoading(false);
+
+        console.log("ERROR");
+        console.log(e);
+      });
+  }
+  const updateStatus = (status) => {
+    updateStatusApi({ transaction_id: props.match.params.id, report_id: props.match.params.id, report_status: status }).then((res) => {
+      if (res.code == 200) {
+        getData();
+      }
+
+    })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+  if (localStorage.getItem('user') == null) {
+    history.push('/signin');
+  }
+
+  if (loading) return (<div className='align-items-center center justify-content-center row w-100' style={{ height: '100vh' }}><CircularProgress color='red' style={{ width: 50, height: 50 }} /></div>);
+  if (!loading && !data) return (<NotFound />);
   return (
     <div className="container-fluid reportWrap">
       <div className="row">
         <aside className="main-sidebar col-12 col-md-3 col-lg-2 px-0">
+          {/* <aside className="main-sidebar px-0" style={{width:"300px"}}> */}
           <div className="main-navbar">
             <nav className="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
               <a
@@ -60,31 +130,31 @@ let Report = (props) => {
               <li className="nav-item">
                 <a className="nav-link " href="#">
                   <i className="material-icons">face</i>
-                  <span>Jane Doe 35/F</span>
+                  <span>{`${data.patient && data.patient.name} ${data.patient && data.patient.age}/${data.patient && data.patient.gender === 'male' ? 'M' : 'F'}`}</span>
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link " href="#">
                   <i className="material-icons">person</i>
-                  <span>Doctor : Dr John Doe</span>
+                  <span>{`Doctor : ${data.doctor && data.doctor.name}`}</span>
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
                   <i className="material-icons">note_add</i>
-                  <span>Radiologist : Dr ABC John</span>
+                  <span>{`Radiologist : ${data.radiologist && data.radiologist.name}`}</span>
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
                   <i className="material-icons">schedule</i>
-                  <span>Scan Time : 12/08/2021 09:10:12</span>
+                  <span>{`Scan Time : ${data.scan_timestamp && moment(data.scan_timestamp, 'YYYY-MM-DDTHH:mm:ss:sssZ').format('DD/MM/YYYY HH:mm:ss')}`}</span>
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
                   <i className="material-icons">hourglass_empty</i>
-                  <span>Upload Time : 12/08/2021 07:09:00</span>
+                  <span>{`Upload Time : ${data.upload_timestamp && moment(data.upload_timestamp, 'YYYY-MM-DDTHH:mm:ss:sssZ').format('DD/MM/YYYY HH:mm:ss')}`}</span>
                 </a>
               </li>
               <li className="nav-item">
@@ -92,10 +162,14 @@ let Report = (props) => {
                   <i className="material-icons">vertical_split</i>
                   <span>History</span>
                   <br />
-                  <span>
-                    Print entire history array here except <br /> for the
-                    deleted true ones
-                  </span>
+                  {(data.history ?? []).map((d) => {
+                    return <div>
+                      <div style={{ height: "10px" }} />
+                      <span style={{ whiteSpace: 'pre-wrap' }}>
+                        {d.content ?? ''}
+                      </span>
+                    </div>
+                  })}
                 </a>
               </li>
               <li class="nav-item dropdown">
@@ -104,16 +178,13 @@ let Report = (props) => {
                   <span class="d-none d-md-inline-block">Formats</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-small">
-                  <a class="dropdown-item" href="#">
-                    <i class="material-icons">book</i> Format 1</a>
-                  <a class="dropdown-item" href="#">
-                    <i class="material-icons">book</i> Format 2</a>
-                  <a class="dropdown-item" href="#">
-                    <i class="material-icons">book</i> Format 3</a>
-                  <a class="dropdown-item" href="#">
-                    <i class="material-icons">book</i> Format 4</a>
-                  <a class="dropdown-item" href="#">
-                    <i class="material-icons">book</i> Format 5</a>
+                  {arrFormat && arrFormat.map((e, i) => {
+                    return <div key={i}> <a class="dropdown-item" href="#" onClick={()=>{
+                      setEditorState(e.content ?? '');
+                    }}>
+                      <i class="material-icons"></i> {e.name ?? ''}</a>
+                    </div>;
+                  })}
                 </div>
               </li>
             </ul>
@@ -236,10 +307,11 @@ let Report = (props) => {
                     aria-expanded="false"
                   >
                     <img
+                    style={{width:'40px',height:'40px'}}
                       className="user-avatar rounded-circle mr-2"
                       src={avatar}
                     />
-                    <span className="d-md-inline-block">Sierra Brooks</span>
+                    <span className="d-md-inline-block">{JSON.parse(localStorage.getItem('user'))['username']}</span>
                   </a>
                   <div className="dropdown-menu dropdown-menu-small">
                     <a className="dropdown-item" href="#">
@@ -247,7 +319,10 @@ let Report = (props) => {
                     </a>
 
                     <div className="dropdown-divider"></div>
-                    <a className="dropdown-item text-danger" href="#">
+                    <a className="dropdown-item text-danger" href="#" onClick={() => {
+                      localStorage.removeItem('user');
+                      history.push('/signin');
+                    }}>
                       <i className="material-icons text-danger">&#xE879;</i>{" "}
                       Logout{" "}
                     </a>
@@ -255,7 +330,7 @@ let Report = (props) => {
                 </li>
               </ul>
 
-              <a
+              {/* <a
                 href=""
                 title="Patient History"
                 className="btn btn-primary btn-history"
@@ -263,7 +338,7 @@ let Report = (props) => {
                 data-target="#PatientHistoryModal"
               >
                 Patient History
-              </a>
+              </a> */}
 
               <nav className="nav">
                 <a
@@ -287,6 +362,7 @@ let Report = (props) => {
               <div className="col-12 col-sm-4 text-center text-sm-left mb-0">
                 <span className="text-uppercase page-subtitle">Report</span>
                 {/* <h3 className="page-title">Report</h3> */}
+
               </div>
             </div>
 
@@ -298,7 +374,17 @@ let Report = (props) => {
                       <div
                         id="editor-container"
                         className="add-new-post__editor mb-1"
-                      ></div>
+                      > <JoditEditor
+                          value={editorState}
+                          config={{
+                            readonly: false // all options from https://xdsoft.net/jodit/doc/
+                          }}
+                          tabIndex={1} // tabIndex of textarea
+                          onBlur={newContent => setEditorState(newContent)} // preferred to use only this option to update the content for performance reasons
+                          onChange={newContent => { 
+                            console.log(newContent);
+                          }}
+                        /></div>
                     </form>
                   </div>
                 </div>
@@ -314,14 +400,18 @@ let Report = (props) => {
                       <li className="list-group-item p-3">
                         <span className="d-flex mb-2">
                           <i className="material-icons mr-1">flag</i>
-                          <strong className="mr-1">Status:</strong> Critical
+                          <strong className="mr-1">Status:</strong> {data['report_status'] ?? 'Pending'}
                         </span>
                       </li>
                       <li className="list-group-item d-flex px-3">
-                        <button className="btn btn-sm btn-outline-accent">
+                        <button className="btn btn-sm btn-outline-accent" onClick={() => {
+                          updateStatus('Pending');
+                        }}>
                           <i className="material-icons">save</i> Save Draft
                         </button>
-                        <button className="btn btn-sm btn-accent ml-auto">
+                        <button className="btn btn-sm btn-accent ml-auto" onClick={() => {
+                          updateStatus('Complete');
+                        }}>
                           <i className="material-icons">file_copy</i> Publish
                         </button>
                       </li>
@@ -336,135 +426,70 @@ let Report = (props) => {
                   <div className="card-body p-0">
                     <ul className="list-group list-group-flush">
                       <li className="list-group-item px-3 pb-2">
-                        <div className="custom-control custom-checkbox mb-1">
-                          <input
-                            type="checkbox"
-                            className="custom-control-input"
-                            id="category1"
-                            checked
-                          />
-                          <label
-                            className="custom-control-label"
-                            for="category1"
-                          >
-                            Abnormal
-                          </label>
-                        </div>
-                        <div className="custom-control custom-checkbox mb-1">
-                          <input
-                            type="checkbox"
-                            className="custom-control-input"
-                            id="category2"
-                            checked
-                          />
-                          <label
-                            className="custom-control-label"
-                            for="category2"
-                          >
-                            Normal
-                          </label>
-                        </div>
-                        <div className="custom-control custom-checkbox mb-1">
-                          <input
-                            type="checkbox"
-                            className="custom-control-input"
-                            id="category3"
-                          />
-                          <label
-                            className="custom-control-label"
-                            for="category3"
-                          >
-                            TB
-                          </label>
-                        </div>
-                        <div className="custom-control custom-checkbox mb-1">
-                          <input
-                            type="checkbox"
-                            className="custom-control-input"
-                            id="category4"
-                          />
-                          <label
-                            className="custom-control-label"
-                            for="category4"
-                          >
-                            ILD
-                          </label>
-                        </div>
-                        <div className="custom-control custom-checkbox mb-1">
-                          <input
-                            type="checkbox"
-                            className="custom-control-input"
-                            id="category5"
-                          />
-                          <label
-                            className="custom-control-label"
-                            for="category5"
-                          >
-                            Mass
-                          </label>
-                        </div>
-                      </li>
-                      <li className="list-group-item d-flex px-3">
-                        <div className="input-group">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="New category"
-                            aria-label="Add new category"
-                            aria-describedby="basic-addon2"
-                          />
-                          <div className="input-group-append">
-                            <button
-                              className="btn btn-white px-2"
-                              type="button"
+                        {arrCategory && arrCategory.map((element, i) => {
+                          return <div className="custom-control custom-checkbox mb-1" key={element._id}>
+                            <input
+                              type="checkbox"
+                              className="custom-control-input"
+                              id={i}
+                              checked={element.check && element.check === true}
+                              onClick={(e) => {
+                                console.log(e);
+                                var arr = arrCategory;
+                                arr[e.target.id].check = !(element.check && element.check === true)
+                                setArrCategory(arr);
+                              }}
+                            />
+                            <label
+                              className="custom-control-label"
+                              for={i}
                             >
-                              <i className="material-icons">add</i>
-                            </button>
-                          </div>
-                        </div>
+                              {element.name}
+                            </label>
+                          </div>;
+                        })}
                       </li>
+                      <div className="card-header border-bottom">
+                        <h6 className="m-0">New Report Content Category</h6>
+                      </div>
+                      <div className="card-body p-0">
+                        <ul className="list-group list-group-flush">
+                          <li className="list-group-item d-flex px-3">
+                            <form>
+                              <div className="form-row">
+                                <div className="form-group col-md-6">
+                                  <input
+                                    type="text"
+                                    className="form-control is-valid"
+                                    id="validationServer01"
+                                    placeholder="Category Name"
+                                    required
+                                  />
+                                </div>
+                                <div className="form-group col-md-6">
+                                  <select className="form-control is-invalid">
+                                    <option selected>Choose...</option>
+                                    <option>Checkbox Testgroup 1</option>
+                                    <option>Checkbox Testgroup 2</option>
+                                    <option>Checkbox Testgroup 3</option>
+                                    <option>Checkbox Testgroup 4</option>
+                                    <option>Checkbox Testgroup 5</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <button className="btn btn-sm btn-accent">
+                                <i className="material-icons">file_copy</i> Publish
+                              </button>
+                            </form>
+                          </li>
+                        </ul>
+                      </div>
                     </ul>
                   </div>
                 </div>
 
-                <div className="card card-small mb-30">
-                  <div className="card-header border-bottom">
-                    <h6 className="m-0">New Report Content Category</h6>
-                  </div>
-                  <div className="card-body p-0">
-                    <ul className="list-group list-group-flush">
-                      <li className="list-group-item d-flex px-3">
-                        <form>
-                          <div className="form-row">
-                            <div className="form-group col-md-6">
-                              <input
-                                type="text"
-                                className="form-control is-valid"
-                                id="validationServer01"
-                                placeholder="Category Name"
-                                required
-                              />
-                            </div>
-                            <div className="form-group col-md-6">
-                              <select className="form-control is-invalid">
-                                <option selected>Choose...</option>
-                                <option>Checkbox Testgroup 1</option>
-                                <option>Checkbox Testgroup 2</option>
-                                <option>Checkbox Testgroup 3</option>
-                                <option>Checkbox Testgroup 4</option>
-                                <option>Checkbox Testgroup 5</option>
-                              </select>
-                            </div>
-                          </div>
 
-                          <button className="btn btn-sm btn-accent">
-                            <i className="material-icons">file_copy</i> Publish
-                          </button>
-                        </form>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -563,7 +588,7 @@ let Report = (props) => {
             </div>
           </div>
 
-          <footer className="main-footer d-flex p-2 px-3 bg-white border-top">
+          {/* <footer className="main-footer d-flex p-2 px-3 bg-white border-top">
             <ul className="nav">
               <li className="nav-item">
                 <a className="nav-link" href="#">
@@ -607,7 +632,7 @@ let Report = (props) => {
                 DesignRevision
               </a>
             </span>
-          </footer>
+          </footer> */}
         </main>
       </div>
     </div>

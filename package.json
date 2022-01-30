@@ -1,5 +1,6 @@
 {
   "name": "intelpixel",
+  "homepage": "http://165.232.186.12:8080/app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

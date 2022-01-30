@@ -537,7 +537,9 @@ style={{width:'40px',height:'40px'}}
                               >
 
                               </div> */}
-                              <td>{i}</td>
+                              <td> <a className="nav-link" href=""  onClick={() => {
+                                  history.push(`report/${ele._id}`)
+                                }}><i className="fas fa-eye"></i></a></td>
                               <td>{ele.patient && ele.patient._id}</td>
                               <td>{ele.patient && ele.patient.name}</td>
                               <td>{ele.patient && ele.patient.age}</td>

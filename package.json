@@ -1,6 +1,6 @@
 {
   "name": "intelpixel",
-  "homepage": "http://165.232.186.12:8080/app",
+  "homepage": "https://stallioninfotech238.github.io/reactjs_dh",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -26,7 +26,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

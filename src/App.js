@@ -7,7 +7,7 @@ import Signup from "./pages/Signup";
 import NotFound from "./components/notFound";
 function App() {
   return (
-    <Router basename="app">
+    <Router>
       <Switch>
         <Route exact path="/" component={Detail}></Route>
         <Route exact path="/report/:id" component={Report}></Route>

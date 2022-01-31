@@ -61,7 +61,7 @@ let Signin = (props) => {
             <div className="register-head">
               <h2>Log In</h2>
               <p>
-                Don't have an account? <a href="/app/signup">Sign Up</a>
+                Don't have an account? <a href="/signup">Sign Up</a>
               </p>
             </div>
 

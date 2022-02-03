@@ -1,5 +1,5 @@
 import axios from "axios";
-export const urlEndPoint = 'http://165.232.186.12:8080';
+export const urlEndPoint = 'http://165.22.223.97';
 // export const urlEndPoint = 'http://localhost:8080';
 export function getaxiosInstance() {
   var axiosInstance;

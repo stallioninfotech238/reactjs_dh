@@ -15,16 +15,25 @@ export const setApproverApi = async (params) => {
   return await getaxiosInstance().post(`/api/transaction/approver/assign`,params);
 };
 export const getRoleApi = async () => {
-  return await getaxiosInstance().get(`/api/roles/names/get`);
+  return await getaxiosInstance().get(`/api/role/get`);
 };
-export const getLabApi = async () => {
-  return await getaxiosInstance().get(`/api/labs/names/get`);
+export const getLabByCityApi = async (params) => {
+  return await getaxiosInstance().post(`/api/lab/getbycityid`,params);
+};
+export const getCenterByLabApi = async (params) => {
+  return await getaxiosInstance().post(`/api/center/getbylabid`,params);
+};
+export const getCenterByIdApi = async (params) => {
+  return await getaxiosInstance().post(`/api/center/getbyid`,params);
+};
+export const getCityApi = async () => {
+  return await getaxiosInstance().get(`/api/city/get`);
 };
 export const signinApi = async (params) => {
   return await getaxiosInstance().post(`/api/user/login`,params);
 };
 export const signupApi = async (params) => {
-  return await getaxiosInstance().post(`/api/user/signup`,params);
+  return await getaxiosInstance().post(`/api/user/create`,params);
 };
 export const addHistoryApi = async (params) => {
   return await getaxiosInstance().post(`/api/transaction/report/create`,params);
@@ -42,7 +51,31 @@ export const updateStatusApi = async (params) => {
   return await getaxiosInstance().post(`/api/report/status/update`,params);
 };
 export const getReportFormatApi = async () => {
-  return await getaxiosInstance().get(`/api/reportformat/get`);
+  return await getaxiosInstance().get(`/api/reportFormat/get`);
+};
+export const getDoctorApi = async () => {
+  return await getaxiosInstance().get(`/api/doctor/get`);
+};
+export const addPatientApi = async (params) => {
+  return await getaxiosInstance().post(`/api/patient/create`,params);
+};
+export const updatePatientApi = async (params) => {
+  return await getaxiosInstance().post(`/api/patient/update`,params);
+};
+export const getPatientByPhoneApi = async (params) => {
+  return await getaxiosInstance().post(`/api/patient/getbyid`,params);
+};
+export const getCenterApi = async () => {
+  return await getaxiosInstance().get(`/api/center/get`);
+};
+export const getClientApi = async () => {
+  return await getaxiosInstance().get(`/api/client/get`);
+};
+export const getTestApi = async () => {
+  return await getaxiosInstance().get(`/api/test/get`);
+};
+export const addTransactionApi = async (params) => {
+  return await getaxiosInstance().post(`/api/transaction/create`,params);
 };
 
 function objToQueryString(obj) {

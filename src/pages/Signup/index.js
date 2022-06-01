@@ -1,10 +1,11 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "./style.css";
 import intelpixel from "../../images/intelpixel.png"; // with import
-import { signupApi, getLabApi, getRoleApi } from "../../services/api";
+import { signupApi, getLabByCityApi, getRoleApi,getCityApi,getCenterByLabApi } from "../../services/api";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useHistory } from "react-router-dom";
+import { MultiSelect } from "react-multi-select-component";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -17,7 +18,6 @@ let Signup = (props) => {
     "username": "",
     "password": "",
     "password_again": "",
-    "lab_id": "",
     "role": "",
     "email": "",
     "address": "",
@@ -28,15 +28,48 @@ let Signup = (props) => {
   const [resType, setResType] = useState("");
   const [arrRole, setArrRole] = useState([]);
   const [arrLab, setArrLab] = useState([]);
+  const [arrSelectedLab, setArrSelectedLab] = useState([]);
+  const [arrCity, setArrCity] = useState([]);
+  const [arrSelectedCity, setArrSelectedCity] = useState([]);
+  const [arrCenter, setArrCenter] = useState([]);
+  const [arrSelectedCenter, setArrSelectedCenter] = useState([]);
 
   useEffect(() => {
-    getLabs();
+    // getLabs();
     getRoles();
+    getCity();
   }, []);
-  const getLabs = () => {
-    getLabApi().then((res) => {
+  const getLabs = (arr) => {
+    console.log(arr);
+    var arr1 = arr.map((e)=>e.value);
+    getLabByCityApi({"city_id":arr1}).then((res) => {
       if (res.status) {
         setArrLab(res.data ?? []);
+      }
+    })
+      .catch((e) => {
+        console.log("ERROR");
+        console.log(e);
+      });
+
+  }
+  const getCenter = (arr) => {
+    var arr1 = arr.map((e)=>e.value);
+    getCenterByLabApi({"lab_id":arr1}).then((res) => {
+      if (res.status) {
+        setArrCenter(res.data ?? []);
+      }
+    })
+      .catch((e) => {
+        console.log("ERROR");
+        console.log(e);
+      });
+
+  }
+  const getCity = () => {
+    getCityApi().then((res) => {
+      if (res.status) {
+        setArrCity(res.data ?? []);
       }
     })
       .catch((e) => {
@@ -65,6 +98,9 @@ let Signup = (props) => {
       setResMessage('Password does not match');
       return;
     }
+    formInput.lab_id = arrSelectedLab.map((e)=>e.value);
+    formInput.city_id = arrSelectedCity.map((e)=>e.value);
+    formInput.center_id = arrSelectedCenter.map((e)=>e.value);
     signupApi({
       "user": formInput
     })
@@ -222,35 +258,81 @@ let Signup = (props) => {
                       />
                       <label className={"ml-2"} htmlFor="Address">Address</label>
                     </div>
+
                   </div>
                   <div className='row'>
-                    <div className={`w-50 px-4 form-group ${formInput.lab_id && formInput.lab_id.trim() === '' ? '' : 'active'}`}>
-                      <select id="Lab" className="form-control p-0 mt-3" name="Lab" value={formInput.lab_id} onChange={(e) => {
-                        setFormInput({ ...formInput, lab_id: e.target.value });
-                      }}>
-                        <option value="">Select Lab</option>
-                        {arrLab.map((e) => {
-                          return <option value={e['_id']} key={e['_id']} >{e['name']}</option>
+                    <div className={`w-50 px-4`}>
+                      <div style={{ marginTop: "-15px", fontSize: "16px", fontWeight: "500" }}>City</div>
+                      <MultiSelect
+                        options={arrCity.map((e) => {
+                          return { label: e['name'], value: e['_id'] }
                         })}
-
-                      </select>
-                      <label className={"ml-2"} htmlFor="Lab">Lab</label>
+                        value={arrSelectedCity}
+                        
+                        onChange={(e) => {
+                          console.log(e);
+                          setArrSelectedCity(e);
+                          setArrSelectedLab([]);
+                          setArrSelectedCenter([]);
+                          getLabs(e);
+                          // setFormInput({ ...formInput, lab_id: e.target.value });
+                        }}
+                        labelledBy="Select"
+                        id="City" className="form-control p-0 mt-1" name="City"
+                      />
                     </div>
-                    <div className={`w-50 px-4 form-group ${formInput.role && formInput.role.trim() === '' ? '' : 'active'}`}>
-                      
-                      <select id="Role" className="form-control p-0 mt-3" name="Role" value={formInput.role} onChange={(e) => {
-                        setFormInput({ ...formInput, role: e.target.value });
-                      }}>
-                        <option value="">Select Role</option>
-                        {arrRole.map((e) => {
-                          return <option value={e['_id']} key={e['_id']} >{e['name']}</option>
+                    <div className={`w-50 px-4`}>
+                      <div style={{ marginTop: "-15px", fontSize: "16px", fontWeight: "500" }}>Lab</div>
+                      <MultiSelect
+                        options={arrLab.map((e) => {
+                          return { label: e['name'], value: e['_id'] }
                         })}
-
-                      </select>
-                      <label className={"ml-2"} htmlFor="Role">Role</label>
+                        value={arrSelectedLab}
+                        onChange={(e) => {
+                          console.log(e);
+                          setArrSelectedLab(e);
+                          setArrSelectedCenter([]);
+                          getCenter(e);
+                          // setFormInput({ ...formInput, lab_id: e.target.value });
+                        }}
+                        labelledBy="Select"
+                        id="Lab" className="form-control p-0 mt-1" name="Lab"
+                      />
                     </div>
+                    
                   </div>
-                  <div className='row'>
+                  <div className='row' style={{paddingTop:"30px"}}>
+                      <div className={`w-50 px-4`}>
+                        <div style={{ marginTop: "-15px", fontSize: "16px", fontWeight: "500" }}>Center</div>
+                        <MultiSelect
+                          options={arrCenter.map((e) => {
+                            return { label: e['name'], value: e['_id'] }
+                          })}
+                          value={arrSelectedCenter}
+                          onChange={(e) => {
+                            console.log(e);
+                            setArrSelectedCenter(e);
+                            // setFormInput({ ...formInput, lab_id: e.target.value });
+                          }}
+                          labelledBy="Select"
+                          id="Center" className="form-control p-0 mt-1" name="Center"
+                        />
+                      </div>
+                      <div className={`w-50 px-4 form-group ${formInput.role && formInput.role.trim() === '' ? '' : 'active'}`}>
+
+                        <select id="Role" className="form-control p-0 mt-3" name="Role" value={formInput.role} onChange={(e) => {
+                          setFormInput({ ...formInput, role: e.target.value });
+                        }}>
+                          <option value="">Select Role</option>
+                          {arrRole.map((e) => {
+                            return <option value={e['_id']} key={e['_id']} >{e['name']}</option>
+                          })}
+
+                        </select>
+                        <label className={"ml-2"} htmlFor="Role">Role</label>
+                      </div>
+                    </div>
+                  <div className='row mt-1'>
                     <div className={`w-50 px-4 form-group ${formInput.password && formInput.password.trim() === '' ? '' : 'active'}`}>
                       <input
                         type="password"

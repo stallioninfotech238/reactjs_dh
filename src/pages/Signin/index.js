@@ -60,9 +60,9 @@ let Signin = (props) => {
           <div className="main-content-container container-fluid register-wrap">
             <div className="register-head">
               <h2>Log In</h2>
-              <p>
+              {/* <p>
                 Don't have an account? <a href="/signup">Sign Up</a>
-              </p>
+              </p> */}
             </div>
 
             <div className="register-box">
@@ -113,9 +113,9 @@ let Signin = (props) => {
                       </div>
                     </div>
 
-                    <div className="col text-right">
+                    {/* <div className="col text-right">
                       <a href="#">Forgot Password or Email?</a>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="reg-frm-action">

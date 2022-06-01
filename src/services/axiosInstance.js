@@ -1,6 +1,6 @@
 import axios from "axios";
-export const urlEndPoint = 'https://165.22.223.97';
-// export const urlEndPoint = 'http://localhost:8080';
+// export const urlEndPoint = 'https://radiology.org.in';
+export const urlEndPoint = 'http://localhost:8080';
 export function getaxiosInstance() {
   var axiosInstance;
   var mainUrl = urlEndPoint;

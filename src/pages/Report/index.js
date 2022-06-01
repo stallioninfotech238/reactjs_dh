@@ -71,9 +71,6 @@ let Report = (props) => {
         console.log(e);
       });
   }
-  if (localStorage.getItem('user') == null) {
-    history.push('/signin');
-  }
 
   if (loading) return (<div className='align-items-center center justify-content-center row w-100' style={{ height: '100vh' }}><CircularProgress color='red' style={{ width: 50, height: 50 }} /></div>);
   if (!loading && !data) return (<NotFound />);
@@ -204,7 +201,7 @@ let Report = (props) => {
                   <span className="d-none d-md-inline ml-1"></span>
                 </span>
               </a> */}
-              <ul className="navbar-nav all-center-dd">
+              {/* <ul className="navbar-nav all-center-dd">
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle text-nowrap"
@@ -214,19 +211,19 @@ let Report = (props) => {
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    <span className="d-md-inline-block">All Centres</span>
+                    <span className="d-md-inline-block">All Centers</span>
                   </a>
                   <div className="dropdown-menu dropdown-menu-small">
                     <a className="dropdown-item" href="#">
-                      <i className="material-icons">&#xE7FD;</i> Centre 1
+                      <i className="material-icons">&#xE7FD;</i> Center 1
                     </a>
                     <a className="dropdown-item text-danger" href="#">
                       <i className="material-icons text-danger">&#xE7FD;</i>{" "}
-                      Centre 2
+                      Center 2
                     </a>
                   </div>
                 </li>
-              </ul>
+              </ul> */}
 
               <form
                 action="#"

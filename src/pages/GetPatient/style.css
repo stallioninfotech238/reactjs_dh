@@ -1,0 +1,83 @@
+
+/*Sign In*/
+.getPatientPage .register-logo-wrap{background:#fff;padding:10px 15px;}
+.getPatientPage .register-logo-wrap a{display:inline-block;max-width:250px;}
+.getPatientPage .register-logo-wrap a img{max-width:100%;}
+.getPatientPage .register-wrap{min-height:calc(100vh - 87px) !important;background:#fff;padding-top:30px;padding-bottom:100px;-webkit-align-items:center;align-items:center;-webkit-flex-direction:column;flex-direction:column;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;}
+.getPatientPage .register-wrap a{-webkit-transition:all 0.35s ease 0s;transition:all 0.35s ease 0s;}
+.getPatientPage .register-box{padding:55px 0;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;width:1000px;}
+.getPatientPage .register-head{text-align:center;font-size:20px;font-weight:500;}
+.getPatientPage .register-head h2{font-weight:bold;font-size:3.7rem;line-height:1.3;color:#3d5170;margin:0 0 25px;}
+.getPatientPage .register-head p:last-child{margin-bottom:0;}
+.getPatientPage .register-box .register-form-wrap{width:100%;padding:20px 70px 20px 0;}
+.getPatientPage .register-form-wrap .form-group{position:relative;margin-bottom:30px;}
+.getPatientPage .register-form-wrap .form-group input{-webkit-border-radius:0;border-radius:0;;font-size:18px;line-height:22px;font-weight:normal;border:none;border-bottom:1px solid #DADADA;padding:15px 17px 15px;-webkit-box-shadow:none;box-shadow:none;}
+.getPatientPage .register-form-wrap .form-group select{-webkit-border-radius:0;border-radius:0;;font-size:18px;line-height:22px;font-weight:normal;border:none;border-bottom:1px solid #DADADA;-webkit-box-shadow:none;box-shadow:none;}
+.getPatientPage .register-form-wrap .form-group label{margin:0;pointer-events:none;font-weight:500;font-size:18px;line-height:20px;color:#3d5170;position:absolute;top:14px;left:17px;-webkit-transition:all 0.35s ease 0s;transition:all 0.35s ease 0s;}
+.getPatientPage .register-form-wrap .form-group input:focus ~ label,.register-form-wrap .form-group.active input ~ label{top:-15px;font-size:16px;}
+.getPatientPage .register-form-wrap .form-group select:focus ~ label,.register-form-wrap .form-group.active select ~ label{top:-15px;font-size:16px;}
+.getPatientPage .register-form-wrap .box-extra-info{font-size:16px;font-weight:500;white-space:nowrap;}
+.getPatientPage .register-form-wrap .box-extra-info a{text-decoration:none;}
+.getPatientPage .reg-frm-action  .btn{-webkit-border-radius:100px;border-radius:100px;font-size:20px;line-height:22px;font-weight:500;padding:13px 30px 15px;min-width:170px;text-align:center;border:2px solid #007bff;background:transparent;color:#007bff;outline:none;}
+.getPatientPage .reg-frm-action{margin-top:40px;}
+.getPatientPage .reg-frm-action .btn:hover{color:#fff;background:#007bff;}
+.getPatientPage .social-icon-btn-wrap a{text-decoration:none;margin:0 0 30px;font-size:17px;line-height:22px;padding:15px 20px 15px 70px;position:relative;text-align:center;display:inline-block;width:300px;max-width:100%;border:1px solid;height:56px;outline:none;}
+.getPatientPage .social-icon-btn-wrap a:last-child{margin-bottom:0;}
+.getPatientPage .social-icon-btn-wrap .facebook-btn{background:#3d5b96;color:#fff;border-color:#3d5b96;}
+.getPatientPage .social-icon-btn-wrap .google-btn{background:#4688f1;color:#fff;border-color:#4688f1;}
+.getPatientPage .social-icon-btn-wrap .apple-btn{color:#000000;}
+.getPatientPage .social-icon-btn-wrap a i{font-size:26px;line-height:54px;position:absolute;width:54px;height:54px;border-right:1px solid;top:0;bottom:0;left:0;background:#fff;}
+.getPatientPage .social-icon-btn-wrap .google-btn i{color:#4688f1;}
+.getPatientPage .social-icon-btn-wrap .facebook-btn i{color:#3d5b96;}
+.getPatientPage .reg-box-note{text-align:center;font-size:16px;line-height:28px;}
+.getPatientPage .reg-box-note p:last-child{margin-bottom:0;}
+.getPatientPage .reg-box-note a{text-decoration:none;}
+
+
+
+/*Responsive*/
+@media only screen and (max-width:1024px){
+.getPatientPage .register-wrap{padding-top:0;padding-bottom:40px;}
+.getPatientPage .register-box{padding:30px 0;width:900px;}
+.getPatientPage .register-head h2{font-size:3.5rem;margin:0 0 20px;}
+.getPatientPage .register-box .register-form-wrap{padding-right:50px;}
+.getPatientPage .register-box .register-btn-wrap{padding-left:50px;}
+}
+
+@media only screen and (max-width:992px){
+.getPatientPage .register-box{width:550px;-webkit-flex-wrap:wrap;flex-wrap:wrap}
+.getPatientPage .register-box .register-form-wrap{width:100%;padding:0 0 40px;border-right:none;border-bottom:2px solid #9a9a9a;}
+.getPatientPage .register-box .register-btn-wrap {width:100%;padding-left:0;padding-top:40px;text-align:center;}
+.getPatientPage .register-btn-wrap .social-icon-btn-wrap {max-width:400px;margin:auto;}
+}
+
+@media only screen and (max-width:767px){
+.getPatientPage .register-box{width:500px}
+.getPatientPage .register-head{font-size:18px;}
+.getPatientPage .register-head h2{font-size:3rem}
+.getPatientPage .reg-frm-action .btn{padding: 11px 30px 13px;}
+.getPatientPage .register-form-wrap .form-group input:focus ~ label, .register-form-wrap .form-group.active input ~ label{top:-10px}
+}
+
+@media only screen and (max-width:568px) and (orientation:landscape){
+.getPatientPage .register-box{width:100%}
+}
+
+@media only screen and (max-width:480px){
+.getPatientPage .register-wrap{padding-top:10px;padding-bottom:30px;}
+.getPatientPage .register-box{width:100%}
+.getPatientPage .social-icon-btn-wrap a{width:284px}
+.getPatientPage .register-form-wrap .box-extra-info{font-size:15px;}
+.getPatientPage .reg-box-note br{display:none;}
+.getPatientPage .register-logo-wrap{text-align:center}
+.getPatientPage .register-logo-wrap a{max-width:230px}
+}
+
+@media only screen and (max-width:360px){
+.getPatientPage .register-form-wrap .box-extra-info{font-size: 14px;}
+}
+
+@media only screen and (max-width:359px){
+.getPatientPage .register-form-wrap .box-extra-info .col.text-right{text-align:left !important;margin-top:15px}
+}
+

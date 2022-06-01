@@ -5,7 +5,7 @@ import xray from "../../images/xray.jpg";
 import avatar from "../../images/0.png";
 import queryString from "query-string";
 import NotFound from "../../components/notFound";
-import { getFiltersApi, getTransactionsApi, setEmergencyApi, setRadiologistApi, setApproverApi, addHistoryApi, updateHistoryApi } from "../../services/api";
+import { getFiltersApi,getTestApi, getTransactionsApi, setEmergencyApi, setRadiologistApi, setApproverApi, addHistoryApi, updateHistoryApi, getCenterByIdApi } from "../../services/api";
 import { urlEndPoint } from "../../services/axiosInstance";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -20,16 +20,15 @@ let Detail = (props) => {
 
   const id = queryString.parse(props.location.search)._id;
   const [arrRadiologist, setArrRadiologist] = useState([]);
-  const [arrBodypart, setArrBodypart] = useState([]);
-  const [arrModality, setArrModality] = useState([]);
+  const [arrTestGroup, setArrTestGroup] = useState([]);
+  const [arrCategory, setArrCategory] = useState([]);
   const [reload, setReload] = useState(true);
   const [arrData, setArrData] = useState([]);
-  const [radiologist, setRadiologist] = useState('');
-  const [bodypart, setBodypart] = useState('');
-  const [modality, setModality] = useState('');
+  const [testGroup, setTestGroup] = useState('');
+  const [category, setCategory] = useState('');
   const [pateintId, setPateintId] = useState('');
   const [pateintName, setPateintName] = useState('');
-  const [studyDesc, setStudyDesc] = useState('');
+  const [mobileNo, setMobileNo] = useState('');
   const [sDate, setSDate] = useState('');
   const [eDate, setEDate] = useState('');
   const [status, setStatus] = useState('');
@@ -38,6 +37,8 @@ let Detail = (props) => {
   const [addHistory, setAddHistory] = useState({});
   const [loading, setLoading] = useState(false);
   const [openPopup, setOpenPopup] = useState('');
+  const [arrCenter, setArrCenter] = useState([]);
+  const [selectedCenter, setSelectedCenter] = useState({ "name": "All Centers", "_id": "0" });
   const sendMessage = () => {
     // inquireApi({
     //   inquire: {
@@ -62,21 +63,39 @@ let Detail = (props) => {
     //   });
   }
   useEffect(() => {
-    getFilters('radiologist');
-    getFilters('bodypart');
-    getFilters('modality');
-    getData();
+    if (localStorage.getItem('user') != null) {
+      getFilters('radiologist');
+      getData();
+      getCenter();
+      getTest();
+    }
   }, []);
+
+  const getCenter = () => {
+    var arr1 = JSON.parse(localStorage.getItem('user'))['center_id'];
+    getCenterByIdApi({ "center_id": arr1 }).then((res) => {
+      if (res.status) {
+        var a = res.data ?? [];
+        a = [{ "name": "All Centers", "_id": "0" }, ...a];
+        setArrCenter(a);
+      }
+    })
+      .catch((e) => {
+        console.log("ERROR");
+        console.log(e);
+      });
+
+  }
   const getData = () => {
     var payload = {
       start_date: sDate,
       end_date: eDate,
       patient_name: pateintName,
       patient_id: pateintId,
-      radiologist_id: radiologist,
-      modality_id: modality,
-      bodypart_id: bodypart,
-      status: status
+      category_id: category,
+      testGroup_id: testGroup,
+      status: status,
+      patient_phone:mobileNo
     };
     getTransactionsApi(payload).then((res) => {
       if (res.status) {
@@ -91,18 +110,24 @@ let Detail = (props) => {
         console.log(e);
       });
   }
+
+  const getTest = () => {
+    getTestApi().then((res) => {
+      if (res.status) {
+        setArrTestGroup(res.data ?? []);
+      }
+    })
+      .catch((e) => {
+        console.log("ERROR");
+        console.log(e);
+      });
+  }
   const getFilters = (filter) => {
     getFiltersApi(filter).then((res) => {
       if (res.status) {
         switch (filter) {
           case 'radiologist':
             setArrRadiologist(res.data ?? []);
-            break;
-          case 'bodypart':
-            setArrBodypart(res.data ?? []);
-            break;
-          case 'modality':
-            setArrModality(res.data ?? []);
             break;
           default:
             break;
@@ -182,10 +207,6 @@ let Detail = (props) => {
   }
   // if (!id) return <NotFound />;
   // if (!data) return <div />;
-  if (localStorage.getItem('user') == null) {
-    history.push('/signin');
-
-  }
   return (
     <div className="container-fluid listingPage">
       <div className="row">
@@ -205,15 +226,17 @@ let Detail = (props) => {
               <ul className="navbar-nav all-center-dd">
                 <li className="nav-item dropdown">
                   <a className="nav-link dropdown-toggle text-nowrap" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <span className="d-md-inline-block">All Centres</span>
+                    <span className="d-md-inline-block">{(selectedCenter && selectedCenter.name) ?? ''}</span>
                   </a>
                   <div className="dropdown-menu dropdown-menu-small">
-                    <a className="dropdown-item" href="#">
-                      <i className="material-icons">&#xE7FD;</i> Centre 1
-                    </a>
-                    <a className="dropdown-item text-danger" href="#">
-                      <i className="material-icons text-danger">&#xE7FD;</i> Centre 2
-                    </a>
+                    {arrCenter.map((e) => {
+                      return <a className="dropdown-item" href="#" onClick={(e1) => {
+                        setSelectedCenter(e);
+                      }}>
+                        <i className="material-icons">&#xE7FD;</i>{e.name ?? ''}
+                      </a>
+                    })}
+
                   </div>
                 </li>
 
@@ -298,7 +321,7 @@ let Detail = (props) => {
                   >
                     <img
 
-style={{width:'40px',height:'40px'}}
+                      style={{ width: '40px', height: '40px' }}
                       className="user-avatar rounded-circle mr-2"
                       src={avatar}
                     />
@@ -322,11 +345,11 @@ style={{width:'40px',height:'40px'}}
               </ul>
 
               <a onClick={() => {
-                setLoading(false);
-                setOpenPopup('show');
+                // setLoading(false);
+                // setOpenPopup('show');
 
-                setAddHistory({ 'ahFirstName': '', 'ahLastName': '', 'ahAge': '', 'ahGender': '', 'ahHistory': [''], 'ahAction': 'Add History' });
-              }} href="" title="Patient History" className="btn btn-primary btn-history" data-toggle="modal" data-target="">Patient History</a>
+                // setAddHistory({ 'ahFirstName': '', 'ahLastName': '', 'ahAge': '', 'ahGender': '', 'ahHistory': [''], 'ahAction': 'Add History' });
+              }} href="/patient" title="Patient Register" className="btn btn-primary btn-history">Patient Register</a>
 
             </nav>
           </div>
@@ -342,53 +365,42 @@ style={{width:'40px',height:'40px'}}
                       <div className="row">
                         <div className="col-md-6">
                           <div className="row">
-                            <div className="col-md-6">
+                            <div className="col-md-12">
                               <div className="form-group">
                                 <input type="text" className="form-control" placeholder="Patient ID" aria-label="PatientID" value={pateintId} onChange={(e) => {
                                   setPateintId(e.target.value);
                                 }}></input>
                               </div>
                             </div>
-                            <div className="col-md-6">
+                          </div>
+
+                          <div className="row">
+
+                          <div className="col-md-6">
                               <div className="form-group">
                                 <input type="text" className="form-control" placeholder="Patient Name" aria-label="PatientName" value={pateintName} onChange={(e) => {
                                   setPateintName(e.target.value);
                                 }}></input>
                               </div>
                             </div>
-                          </div>
-
-                          <div className="row">
                             <div className="col-md-6">
                               <div className="form-group">
-                                <input type="text" className="form-control" placeholder="Study Description" aria-label="StudyDescription" value={studyDesc} onChange={(e) => {
-                                  setStudyDesc(e.target.value);
+                                <input type="text" className="form-control" placeholder="Patient Mobile Number" aria-label="MobileNo" value={mobileNo} onChange={(e) => {
+                                  setMobileNo(e.target.value);
                                 }}></input>
                               </div>
                             </div>
-                            <div className="col-md-6">
-                              <div className="form-group">
-                                <select className="form-control" onChange={(e) => setRadiologist(e.target.value)}
-                                  value={radiologist}
-                                >
-                                  <option value="">Radiologist</option>
-                                  {arrRadiologist.map((e) => {
-                                    return <option value={e['_id']}>{e['name']}</option>
-                                  })}
-                                </select>
-                              </div>
-                            </div>
                           </div>
 
                           <div className="row">
-                            <div className="col-md-6">
-                              <div className="form-group">
 
-                                <select className="form-control" onChange={(e) => setModality(e.target.value)}
-                                  value={modality}
+                          <div className="col-md-6">
+                              <div className="form-group">
+                                <select className="form-control" onChange={(e) => setTestGroup(e.target.value)}
+                                  value={testGroup}
                                 >
-                                  <option value="">Modality</option>
-                                  {arrModality.map((e) => {
+                                  <option value="">TestGroup</option>
+                                  {arrTestGroup.map((e) => {
                                     return <option value={e['_id']}>{e['name']}</option>
                                   })}
                                 </select>
@@ -396,11 +408,12 @@ style={{width:'40px',height:'40px'}}
                             </div>
                             <div className="col-md-6">
                               <div className="form-group">
-                                <select className="form-control" onChange={(e) => setBodypart(e.target.value)}
-                                  value={bodypart}
+
+                                <select className="form-control" onChange={(e) => setCategory(e.target.value)}
+                                  value={category}
                                 >
-                                  <option value="">Bodypart</option>
-                                  {arrBodypart.map((e) => {
+                                  <option value="">Category</option>
+                                  {arrCategory.map((e) => {
                                     return <option value={e['_id']}>{e['name']}</option>
                                   })}
                                 </select>
@@ -512,7 +525,7 @@ style={{width:'40px',height:'40px'}}
                             <th>Patient Gender</th>
                             <th>Emergency</th>
                             <th>History</th>
-                            <th>Modality</th>
+                            <th>Category</th>
                             <th>Organ</th>
                             <th>Image</th>
                             <th>Assign Radiologist</th>
@@ -537,9 +550,9 @@ style={{width:'40px',height:'40px'}}
                               >
 
                               </div> */}
-                              <td> <a className="nav-link" href=""  onClick={() => {
-                                  history.push(`report/${ele._id}`)
-                                }}><i className="fas fa-eye"></i></a></td>
+                              <td> <a className="nav-link" href="" onClick={() => {
+                                history.push(`report/${ele._id}`)
+                              }}><i className="fas fa-eye"></i></a></td>
                               <td>{ele.patient && ele.patient._id}</td>
                               <td>{ele.patient && ele.patient.name}</td>
                               <td>{ele.patient && ele.patient.age}</td>
@@ -570,11 +583,11 @@ style={{width:'40px',height:'40px'}}
                                 <a className="nav-link" href="" data-toggle="modal" data-target="" onClick={() => {
                                   setLoading(false);
                                   setOpenPopup('show');
-                                  setAddHistory({ '_id': ele['_id'], 'ahFirstName': ele.patient && ele.patient.name && ele.patient.name.split(" ") && ele.patient.name.split(" ")[0], 'ahLastName': ele.patient && ele.patient.name && ele.patient.name.split(" ") && ele.patient.name.split(" ")[1], 'ahAge': ele.patient && ele.patient.age, 'ahGender': ele.patient && ele.patient.gender, 'ahHistory': (ele.history ?? []).map((e) => e['content']).length == 0 ? [''] : (ele.history ?? []).map((e) => e['content']) , 'ahAction': 'Update History' });
+                                  setAddHistory({ '_id': ele['_id'], 'ahFirstName': ele.patient && ele.patient.name && ele.patient.name.split(" ") && ele.patient.name.split(" ")[0], 'ahLastName': ele.patient && ele.patient.name && ele.patient.name.split(" ") && ele.patient.name.split(" ")[1], 'ahAge': ele.patient && ele.patient.age, 'ahGender': ele.patient && ele.patient.gender, 'ahHistory': (ele.history ?? []).map((e) => e['content']).length == 0 ? [''] : (ele.history ?? []).map((e) => e['content']), 'ahAction': 'Update History' });
                                 }}><i className="fas fa-edit"></i></a>
                               </td>
-                              <td>{ele.modality && ele.modality.name}</td>
-                              <td>{ele.bodypart && ele.bodypart.name}</td>
+                              <td>{ele.category && ele.category.name}</td>
+                              <td>{ele.testGroup && ele.testGroup.name}</td>
                               <td className="text-nowrap">{`${(ele.image_count && ele.image_count.uploaded) ?? 0}/${(ele.image_count && ele.image_count.total) ?? 0}`} <i className="fas fa-download"></i></td>
                               <td>
                                 <div className="form-group">
@@ -843,6 +856,6 @@ style={{width:'40px',height:'40px'}}
   );
 };
 const getV = (ele) => {
-  return ele._id;
+  return ele && ele._id;
 }
 export default Detail;

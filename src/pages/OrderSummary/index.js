@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "./style.css";
 import intelpixel from "../../images/intelpixel.png"; // with import
-import { addPatientApi, addTransactionApi, getPatientByPhoneApi, getCenterApi, getClientApi, updatePatientApi } from "../../services/api";
+import { couponcodesValidateApi, addTransactionApi, getPatientByPhoneApi, getCenterApi, getClientApi, updatePatientApi } from "../../services/api";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useHistory } from "react-router-dom";
@@ -41,7 +41,6 @@ let OrderSummary = (props) => {
       }
     }
   }, []);
-
   const add = () => {
 
     addTransactionApi({
@@ -104,6 +103,30 @@ let OrderSummary = (props) => {
         console.log(e);
       });
   }
+  const verifyCode = () => {
+
+    couponcodesValidateApi({
+      "coupon":  formInput.coupon,
+      "testgroups": [],
+      "total_price":props.location.state.reduce((n, { printing_cost }) => n + printing_cost, 0),
+      "patient_id":patient._id
+  })
+      .then((res) => {
+        console.log(res);
+        if (res.status) {
+          setResType("success");
+        }
+        else {
+          setResType("error");
+        }
+        setResMessage(res.message);
+
+      })
+      .catch((e) => {
+        console.log("ERROR");
+        console.log(e);
+      });
+  }
   if (patient === null)
     return (<div></div>);
   return (
@@ -154,6 +177,12 @@ let OrderSummary = (props) => {
                     <div className="w-50">
                       <button className="btn btn-primary" onClick={(e) => {
                         e.preventDefault();
+                        if (formInput.coupon.trim() === '') {
+                          setResType("error");
+                          setResMessage('Please enter Coupon.');
+                        } else {
+                          verifyCode();
+                        }
                       }}>
                         APPLY
                       </button>
@@ -188,7 +217,7 @@ let OrderSummary = (props) => {
                       e.preventDefault();
                       if (formInput.paidAmount.trim() === '') {
                         setResType("error");
-                        setResMessage('Enter Paid Amount.');
+                        setResMessage('Please enter Paid Amount.');
                       } else {
                         add();
                         // history.push('/');

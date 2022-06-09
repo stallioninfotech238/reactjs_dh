@@ -77,6 +77,9 @@ export const getTestApi = async () => {
 export const addTransactionApi = async (params) => {
   return await getaxiosInstance().post(`/api/transaction/create`,params);
 };
+export const couponcodesValidateApi = async (params) => {
+  return await getaxiosInstance().post(`/api/couponcodes/validate`,params);
+};
 
 function objToQueryString(obj) {
   const keyValuePairs = [];

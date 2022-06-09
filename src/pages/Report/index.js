@@ -10,7 +10,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import NotFound from "../../components/notFound";
 import moment from "moment";
 import JoditEditor from "jodit-react";
-
+import { jsPDF } from "jspdf";
+import ReactDOMServer from "react-dom/server";
+import html2canvas from "html2canvas";
 
 let Report = (props) => {
   const history = useHistory();
@@ -176,8 +178,9 @@ let Report = (props) => {
                 </a>
                 <div class="dropdown-menu dropdown-menu-small">
                   {arrFormat && arrFormat.map((e, i) => {
-                    return <div key={i}> <a class="dropdown-item" href="#" onClick={()=>{
-                      setEditorState(e.content ?? '');
+                    return <div key={i}> <a class="dropdown-item" href="#" onClick={() => {
+                      var s = `<div> <div class="m-0 row"><p class="ct1" style="width: 49%;"><span style="font-size: 16px;">Patient ID: ${data.patient._id} </span></p><p class="ct2" style="width: 49%;"><span style="font-size: 16px;">Name Of Patient: ${data.patient.name}</span></p></div><div class="m-0 row"><p class="ct3" style="width: 49%;"><span style="font-size: 16px;">Age/Sex: ${data.patient && data.patient.age}/${data.patient && data.patient.gender === 'male' ? 'M' : 'F'}</span></p><p class="ct1" style="width: 49%;"><span style="font-size: 16px;">Reporting Date: ${moment(new Date()).format("DD/MM/YYYY")}</span></p></div></div>`
+                      setEditorState(s + e.content ?? '');
                     }}>
                       <i class="material-icons"></i> {e.name ?? ''}</a>
                     </div>;
@@ -304,7 +307,7 @@ let Report = (props) => {
                     aria-expanded="false"
                   >
                     <img
-                    style={{width:'40px',height:'40px'}}
+                      style={{ width: '40px', height: '40px' }}
                       className="user-avatar rounded-circle mr-2"
                       src={avatar}
                     />
@@ -378,7 +381,7 @@ let Report = (props) => {
                           }}
                           tabIndex={1} // tabIndex of textarea
                           onBlur={newContent => setEditorState(newContent)} // preferred to use only this option to update the content for performance reasons
-                          onChange={newContent => { 
+                          onChange={newContent => {
                             console.log(newContent);
                           }}
                         /></div>
@@ -408,6 +411,27 @@ let Report = (props) => {
                         </button>
                         <button className="btn btn-sm btn-accent ml-auto" onClick={() => {
                           updateStatus('Complete');
+                          // html2canvas(document.getElementsByClassName('jodit-wysiwyg')[0]).then(canvas => {
+                          //   const img = canvas.toDataURL('image/jpeg');
+                            const doc = new jsPDF('p', 'pt', 'a4');
+                            // pdf.for(document.getElementsByClassName('jodit-wysiwyg')[0]);
+                            // pdf.save('sasd.pdf')
+                        // });
+                        var el = document.getElementsByClassName('jodit-wysiwyg')[0];
+el.style.width = '600px'
+                        doc.html(el, {
+                          callback: function (doc) {
+
+                            doc.save();
+                          },
+                          x: 10,width:200,height:500,
+                          y: 10
+                       });
+                          // doc.html(`<div>${editorState}</div>`);
+                          // doc.fromHTML(`<div>${editorState}</div>`);
+                          // window.open(doc.output('bloburl'), '_blank');
+                          // doc.save("myDocument.pdf");
+                        
                         }}>
                           <i className="material-icons">file_copy</i> Publish
                         </button>

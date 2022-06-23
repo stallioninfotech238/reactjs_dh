@@ -68,6 +68,9 @@ export const getPatientByPhoneApi = async (params) => {
 export const getCenterApi = async () => {
   return await getaxiosInstance().get(`/api/center/get`);
 };
+export const getLabApi = async () => {
+  return await getaxiosInstance().get(`/api/lab/get`);
+};
 export const getClientApi = async () => {
   return await getaxiosInstance().get(`/api/client/get`);
 };

@@ -21,10 +21,10 @@ let GetPatient = (props) => {
   const [resType, setResType] = useState("");
   const [arrPatient, setArrPatient] = useState([]);
 
- 
+
   const getPatient = (s) => {
     console.log(s);
-    getPatientByPhoneApi({'phone':s}).then((res) => {
+    getPatientByPhoneApi({ 'phone': s }).then((res) => {
       if (res.status) {
         setArrPatient(res.data ?? []);
       }
@@ -54,34 +54,39 @@ let GetPatient = (props) => {
                 <form>
                   <div className='row'>
                     <div className={`w-100 px-4 form-group ${formInput.phone && formInput.phone.trim() === '' ? '' : 'active'}`}>
-                    <input
+                      <input
                         type="number"
                         className="form-control px-0 no-spin"
                         id="Phone"
-                        pattern="[0-9]{10}" maxlength="10"
+                        pattern="[0-9]{10}" maxLength="10"
                         value={formInput.phone}
                         onChange={(e) => {
                           var s = e.target.value;
-                          if(s.length > 10)
-                          {
+                          if (s.length > 10) {
                             s = s.substring(0, 10);
                           }
-                          if(s.length == 10)getPatient(s);
+                          if (s.length == 10) getPatient(s);
                           setFormInput({ ...formInput, phone: s });
 
                         }}
                       />
                       <label className={"ml-2"} htmlFor="Phone">Phone Number</label>
-                     
+
                     </div>
-                  
+
                   </div>
-                  {arrPatient.map((e)=><h4 className="mx-2" style={{borderBottom:'1px solid #DADADA',paddingBottom:'8px',cursor:'pointer'}} onClick={()=>{
-                    history.push(`/addPatient/${e._id}`);
+                  {arrPatient.map((e) => <h4 className="mx-2" style={{ borderBottom: '1px solid #DADADA', paddingBottom: '8px', cursor: 'pointer' }} onClick={() => {
+                    history.push(`/addPatient/${e._id}`,formInput.phone);
                   }}>{e.name}</h4>)}
                   <div className="justify-content-center reg-frm-action row">
                     <button className="btn btn-primary" onClick={(e) => {
-                     history.push('/addPatient');
+                      e.preventDefault();
+                      if (formInput.phone.length !== 10) {
+                        setResType("error");
+                        setResMessage('Please enter valid phone number');
+                      } else {
+                        history.push('/addPatient',formInput.phone);
+                      }
                     }}>
                       Add Patient
                     </button>

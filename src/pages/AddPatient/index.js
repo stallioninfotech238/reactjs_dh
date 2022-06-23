@@ -33,6 +33,12 @@ let AddPatient = (props) => {
   useEffect(() => {
     console.log(props);
     if (localStorage.getItem('user') !== null) {
+      if (props.location.state === undefined) {
+        history.push(`/patient`);
+      }else
+      {
+      setFormInput({...formInput,'phone':props.location.state});
+      }
       getDoctor();
       getClient();
       getCenter();
@@ -134,6 +140,16 @@ fi.doctor = {"name":fi.otherDoctor,"_id":null}
         console.log(e);
       });
   }
+  function checkValue(sender) {
+    let min = sender.min;
+    let max = sender.max;
+    let value = parseInt(sender.value);
+    if (value>max) {
+        sender.value = min;
+    } else if (value<min) {
+        sender.value = max;
+    }
+}
   return (
     <div className="container-fluid addPatientPage">
       <div className="row">
@@ -160,6 +176,7 @@ fi.doctor = {"name":fi.otherDoctor,"_id":null}
                         id="Phone"
                         pattern="[0-9]{10}" maxlength="10"
                         value={formInput.phone}
+                        disabled
                         onChange={(e) => {
                           var s = e.target.value;
                           if (s.length > 10) {
@@ -203,8 +220,11 @@ fi.doctor = {"name":fi.otherDoctor,"_id":null}
                         className="form-control px-0"
                         id="Age"
                         value={formInput.age}
+                        min={1}
+                        max={120}
+                        
                         onChange={(e) => {
-                          setFormInput({ ...formInput, age: e.target.value });
+                          setFormInput({ ...formInput, age: ((e.target.value >= 1 && e.target.value <= 120) || e.target.value === '') ? e.target.value : formInput.age});
                         }}
                       />
                       <label className={"ml-2 row"} htmlFor="Age">Age<div style={{color:'red'}}>*</div></label>

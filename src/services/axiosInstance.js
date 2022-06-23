@@ -4,28 +4,27 @@ export const urlEndPoint = 'http://localhost:8080';
 export function getaxiosInstance() {
   var axiosInstance;
   var mainUrl = urlEndPoint;
-  if(localStorage.getItem("user") && localStorage.getItem("user") !== undefined){
+  if (localStorage.getItem("user") && localStorage.getItem("user") !== undefined) {
 
     axiosInstance = axios.create({
       baseURL: mainUrl,
-  
+
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("user")}`,
       },
     });
-}
-else
-{
-  axiosInstance = axios.create({
-    baseURL: mainUrl,
+  }
+  else {
+    axiosInstance = axios.create({
+      baseURL: mainUrl,
 
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-}
-  
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
   axiosInstance.interceptors.response.use(
     function (response) {
       // some unnecessary defensive programming

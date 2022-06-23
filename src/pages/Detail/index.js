@@ -5,7 +5,7 @@ import xray from "../../images/xray.jpg";
 import avatar from "../../images/0.png";
 import queryString from "query-string";
 import NotFound from "../../components/notFound";
-import { getFiltersApi,getTestApi, getTransactionsApi, setEmergencyApi, setRadiologistApi, setApproverApi, addHistoryApi, updateHistoryApi, getCenterByIdApi } from "../../services/api";
+import { getFiltersApi,getTestApi, getTransactionsApi, setEmergencyApi, setRadiologistApi, setApproverApi, addHistoryApi, updateHistoryApi, getCenterApi,getLabApi} from "../../services/api";
 import { urlEndPoint } from "../../services/axiosInstance";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -38,7 +38,9 @@ let Detail = (props) => {
   const [loading, setLoading] = useState(false);
   const [openPopup, setOpenPopup] = useState('');
   const [arrCenter, setArrCenter] = useState([]);
-  const [selectedCenter, setSelectedCenter] = useState({ "name": "All Centers", "_id": "0" });
+  const [selectedCenter, setSelectedCenter] = useState('');
+  const [arrLab, setArrLab] = useState([]);
+  const [selectedLab, setSelectedLab] = useState('');
   const sendMessage = () => {
     // inquireApi({
     //   inquire: {
@@ -67,17 +69,31 @@ let Detail = (props) => {
       getFilters('radiologist');
       getData();
       getCenter();
+      getLab();
       getTest();
     }
   }, []);
 
   const getCenter = () => {
-    var arr1 = JSON.parse(localStorage.getItem('user'))['center_id'];
-    getCenterByIdApi({ "center_id": arr1 }).then((res) => {
+    getCenterApi().then((res) => {
       if (res.status) {
         var a = res.data ?? [];
-        a = [{ "name": "All Centers", "_id": "0" }, ...a];
+        // a = [{ "name": "All Centers", "_id": "0" }, ...a];
         setArrCenter(a);
+      }
+    })
+      .catch((e) => {
+        console.log("ERROR");
+        console.log(e);
+      });
+
+  }
+  const getLab = () => {
+    getLabApi().then((res) => {
+      if (res.status) {
+        var a = res.data ?? [];
+        // a = [{ "name": "All Centers", "_id": "0" }, ...a];
+        setArrLab(a);
       }
     })
       .catch((e) => {
@@ -95,7 +111,9 @@ let Detail = (props) => {
       category_id: category,
       testGroup_id: testGroup,
       status: status,
-      patient_phone:mobileNo
+      patient_phone:mobileNo,
+      lab_id:selectedLab,
+      center_id:selectedCenter
     };
     getTransactionsApi(payload).then((res) => {
       if (res.status) {
@@ -223,7 +241,7 @@ let Detail = (props) => {
                   <span className="d-none d-md-inline ml-1"></span>
                 </span>
               </a> */}
-              <ul className="navbar-nav all-center-dd">
+              {/* <ul className="navbar-nav all-center-dd">
                 <li className="nav-item dropdown">
                   <a className="nav-link dropdown-toggle text-nowrap" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                     <span className="d-md-inline-block">{(selectedCenter && selectedCenter.name) ?? ''}</span>
@@ -240,7 +258,7 @@ let Detail = (props) => {
                   </div>
                 </li>
 
-              </ul>
+              </ul> */}
 
 
               <form action="#" className="main-navbar__search w-100 d-none d-md-flex d-lg-flex"
@@ -420,6 +438,34 @@ let Detail = (props) => {
                               </div>
                             </div>
                           </div>
+                          <div className="row">
+
+                          <div className="col-md-6">
+                              <div className="form-group">
+                                <select className="form-control" onChange={(e) => setSelectedCenter(e.target.value)}
+                                  value={selectedCenter}
+                                >
+                                  <option value="">Center</option>
+                                  {arrCenter.map((e) => {
+                                    return <option value={e['_id']}>{e['name']}</option>
+                                  })}
+                                </select>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <div className="form-group">
+
+                                <select className="form-control" onChange={(e) => setSelectedLab(e.target.value)}
+                                  value={selectedLab}
+                                >
+                                  <option value="">Lab</option>
+                                  {arrLab.map((e) => {
+                                    return <option value={e['_id']}>{e['name']}</option>
+                                  })}
+                                </select>
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
                         <div className="col-md-6">
@@ -519,7 +565,7 @@ let Detail = (props) => {
                         <thead className="bg-light">
                           <tr>
                             <th>#</th>
-                            <th>Patient ID</th>
+                            {/* <th>Patient ID</th> */}
                             <th>Patient Name</th>
                             <th>Patient Age</th>
                             <th>Patient Gender</th>
@@ -553,7 +599,7 @@ let Detail = (props) => {
                               <td> <a className="nav-link" href="" onClick={() => {
                                 history.push(`report/${ele._id}`)
                               }}><i className="fas fa-eye"></i></a></td>
-                              <td>{ele.patient && ele.patient._id}</td>
+                              {/* <td>{ele.patient && ele.patient._id}</td> */}
                               <td>{ele.patient && ele.patient.name}</td>
                               <td>{ele.patient && ele.patient.age}</td>
                               <td>{ele.patient && ele.patient.gender}</td>

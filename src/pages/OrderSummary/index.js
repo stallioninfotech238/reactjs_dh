@@ -47,6 +47,7 @@ let OrderSummary = (props) => {
       "transaction": {
         client_id: patient.client,
         center_id: patient.center,
+        lab_id:patient.center.lab_id,
         report_ids: [],
         doctor: patient.doctor,
         booking_timestamp: Date(),
